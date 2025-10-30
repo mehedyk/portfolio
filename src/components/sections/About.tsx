@@ -6,13 +6,13 @@ import { Card } from '@/components/ui/card';
 const highlights = [
   {
     icon: Code2,
-    title: 'Full-Stack Development',
+    title: 'Development',
     description: 'Building scalable web applications with modern frameworks and best practices',
   },
   {
     icon: Shield,
     title: 'Cybersecurity',
-    description: 'Passionate about security, ethical hacking, and protecting digital infrastructure',
+    description: 'Passionate, but didn\'t do anything fancy yet',
   },
   {
     icon: Zap,
@@ -54,10 +54,12 @@ export const About = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <div className="relative">
-              <div className="aspect-square rounded-2xl border-2 border-primary/50 border-glow overflow-hidden">
-                <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
-                  <Shield className="w-48 h-48 text-primary/30" />
-                </div>
+              <div className="aspect-square rounded-2xl border-2 border-primary/50 border-glow overflow-hidden"> {/* Fixed indentation */}
+                <img 
+                  src="https://i.postimg.cc/SxgWXQ8M/490350118-3054340994718118-3292880685619553824-n.jpg"
+                  alt="S.M. Mehedy Kawser" 
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div className="absolute -top-4 -right-4 w-32 h-32 border-2 border-secondary rounded-2xl -z-10" />
               <div className="absolute -bottom-4 -left-4 w-32 h-32 border-2 border-primary rounded-2xl -z-10" />
