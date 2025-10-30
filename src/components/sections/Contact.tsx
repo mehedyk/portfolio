@@ -69,8 +69,8 @@ export const Contact = () => {
             {/* Contact Details */}
             <div className="space-y-6">
               {[
-                { icon: Mail, label: 'Email', value: 'kawser@example.com' },
-                { icon: Phone, label: 'Phone', value: '+880 XXX XXX XXX' },
+                { icon: Mail, label: 'Email', value: 'kawser2305341202@gmail.com' },
+                { icon: Phone, label: 'Phone', value: 'Just Use any other media for now' },
                 { icon: MapPin, label: 'Location', value: 'Dhaka, Bangladesh' },
               ].map((item, index) => (
                 <motion.div

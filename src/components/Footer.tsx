@@ -12,7 +12,7 @@ export const Footer = () => {
           <div>
             <div className="flex items-center space-x-2 mb-4">
               <Terminal className="h-6 w-6 text-primary" />
-              <span className="font-heading text-xl text-glow">KAWSER</span>
+              <span className="font-heading text-xl text-glow">MEHEDY</span>
             </div>
             <p className="text-sm text-muted-foreground font-body">
               Software Engineer specializing in cybersecurity and full-stack development.
@@ -59,9 +59,7 @@ export const Footer = () => {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-primary/20 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-muted-foreground font-ui flex items-center gap-2">
-            © {currentYear} S.M. Mehedy Kawser. Built with
-            <Heart className="w-4 h-4 text-primary fill-primary animate-pulse" />
-            and code
+            © {currentYear} S.M. Mehedy Kawser. All rights reserved.
           </p>
           <p className="text-xs text-muted-foreground font-ui">
             Designed & Developed with React, TypeScript, GSAP & Framer Motion
