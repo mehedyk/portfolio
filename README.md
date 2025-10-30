@@ -1,8 +1,8 @@
-# Welcome to your Lovable project
+# Assalamu Alaikum
 
 ## Project info
 
-**URL**: https://lovable.dev/projects/88033dfb-5396-4e6d-9526-998d0b2dca28
+**URL**: mehedy.netlify.app
 
 ## How can I edit this code?
 
