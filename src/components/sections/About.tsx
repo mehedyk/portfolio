@@ -12,7 +12,7 @@ const highlights = [
   {
     icon: Shield,
     title: 'Cybersecurity',
-    description: 'Passionate, but didn\'t do anything fancy yet',
+    description: 'description: Passionate, but didn\'t do anything fancy yet',
   },
   {
     icon: Zap,
@@ -54,9 +54,9 @@ export const About = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <div className="relative">
-              <div className="aspect-square rounded-2xl border-2 border-primary/50 border-glow overflow-hidden"> {/* Fixed indentation */}
+              <div className="aspect-square rounded-2xl border-2 border-primary/50 border-glow overflow-hidden">
                 <img 
-                  src="https://i.postimg.cc/SxgWXQ8M/490350118-3054340994718118-3292880685619553824-n.jpg"
+                  src="https://i.postimg.cc/SxgWXQ8M/490350118-3054340994718118-3292880685619553824-n.jpg" 
                   alt="S.M. Mehedy Kawser" 
                   className="w-full h-full object-cover"
                 />
@@ -73,7 +73,7 @@ export const About = () => {
             className="space-y-6"
           >
             <h3 className="text-3xl font-heading text-primary">
-              Hacking Reality, One Line at a Time
+              Learning Reality, One Line at a Time
             </h3>
             <p className="text-lg text-muted-foreground font-body leading-relaxed">
               I'm a Software Engineering student with a deep passion for cybersecurity and 
@@ -82,9 +82,7 @@ export const About = () => {
               that's both powerful and protected.
             </p>
             <p className="text-lg text-muted-foreground font-body leading-relaxed">
-              When I'm not coding, you'll find me exploring the latest security vulnerabilities, 
-              participating in CTF challenges, or experimenting with new technologies. I believe 
-              in continuous learning and pushing the boundaries of what's possible.
+              When I'm not coding, you'll find learning history, philosophy, ethics, religions.
             </p>
             <div className="flex flex-wrap gap-3 pt-4">
               {['React', 'Node.js', 'Python', 'Security', 'DevOps', 'Cloud'].map((tech, i) => (
