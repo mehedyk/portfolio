@@ -12,7 +12,7 @@ const highlights = [
   {
     icon: Shield,
     title: 'Cybersecurity',
-    description: 'description: Passionate, but didn\'t do anything fancy yet',
+    description: 'Passionate, but didn\'t do anything fancy yet',
   },
   {
     icon: Zap,
