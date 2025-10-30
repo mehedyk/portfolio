@@ -44,7 +44,7 @@ export const Footer = () => {
           <div>
             <h4 className="font-heading text-primary mb-4">Get In Touch</h4>
             <ul className="space-y-2 text-sm font-body text-muted-foreground">
-              <li>kawser@example.com</li>
+              <li>kawser2305341202@diu.edu.bd</li>
               <li>Dhaka, Bangladesh</li>
               <li className="flex items-center gap-2">
                 <kbd className="px-2 py-1 bg-muted rounded text-xs">Ctrl</kbd>

@@ -42,7 +42,7 @@ export const Navigation = () => {
             onClick={() => scrollToSection('hero')}
           >
             <Terminal className="h-6 w-6 text-primary" />
-            <span className="font-heading text-xl text-glow">KAWSER</span>
+            <span className="font-heading text-xl text-glow">MEHEDY</span>
           </motion.div>
 
           {/* Desktop Nav */}
