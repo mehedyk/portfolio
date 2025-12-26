@@ -29,7 +29,7 @@ export const Hero = () => {
               <div className="relative w-80 h-80 lg:w-96 lg:h-96 rounded-[40%_60%_70%_30%/40%_50%_60%_50%] overflow-hidden border-4 border-primary/20">
                 {/* CHANGE YOUR IMAGE URL HERE */}
                 <img 
-                  src="https://i.postimg.cc/SxgWXQ8M/490350118_3054340994718118_3292880685619553824_n.jpg" 
+                  src="https://postimg.cc/dhT7pY5s" 
                   alt="S.M. Mehedy Kawser - Software Engineering Student" 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
