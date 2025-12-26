@@ -32,6 +32,7 @@ export const Hero = () => {
                   src="https://i.postimg.cc/SxgWXQ8M/490350118_3054340994718118_3292880685619553824_n.jpg" 
                   alt="S.M. Mehedy Kawser - Software Engineering Student" 
                   className="w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
                 />
               </div>
 
