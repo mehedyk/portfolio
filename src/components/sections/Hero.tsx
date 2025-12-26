@@ -29,7 +29,7 @@ export const Hero = () => {
               <div className="relative w-80 h-80 lg:w-96 lg:h-96 rounded-[40%_60%_70%_30%/40%_50%_60%_50%] overflow-hidden border-4 border-primary/20">
                 {/* CHANGE YOUR IMAGE URL HERE */}
                 <img 
-                  src="images/mehedyk.jpg" 
+                  src="/images/mehedyk.jpg" 
                   alt="S.M. Mehedy Kawser - Software Engineering Student" 
                   className="w-full h-full object-cover"
                 />
