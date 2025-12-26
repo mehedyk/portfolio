@@ -1,10 +1,11 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { useState } from 'react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const skillCategories = [
   {
-    title: 'Frontend',
+    titleKey: 'skills.category.frontend',
     skills: [
       { name: 'React/Next.js', level: 95 },
       { name: 'TypeScript', level: 90 },
@@ -13,7 +14,7 @@ const skillCategories = [
     ],
   },
   {
-    title: 'Backend',
+    titleKey: 'skills.category.backend',
     skills: [
       { name: 'Node.js/Express', level: 90 },
       { name: 'Python/Django', level: 85 },
@@ -22,7 +23,7 @@ const skillCategories = [
     ],
   },
   {
-    title: 'Security',
+    titleKey: 'skills.category.security',
     skills: [
       { name: 'Penetration Testing', level: 85 },
       { name: 'Network Security', level: 82 },
@@ -31,7 +32,7 @@ const skillCategories = [
     ],
   },
   {
-    title: 'DevOps & Cloud',
+    titleKey: 'skills.category.devops',
     skills: [
       { name: 'Docker/Kubernetes', level: 85 },
       { name: 'AWS/Azure', level: 80 },
@@ -48,6 +49,7 @@ export const Skills = () => {
   });
 
   const [activeCategory, setActiveCategory] = useState(0);
+  const { t } = useTranslation();
 
   return (
     <section id="skills" className="min-h-screen py-20 relative" ref={ref}>
@@ -59,7 +61,7 @@ export const Skills = () => {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-6xl font-heading mb-4 text-glow">
-            SKILLS & EXPERTISE
+            {t('skills.title')}
           </h2>
           <div className="w-24 h-1 bg-primary mx-auto" />
         </motion.div>
@@ -68,7 +70,7 @@ export const Skills = () => {
         <div className="flex flex-wrap justify-center gap-4 mb-12">
           {skillCategories.map((category, index) => (
             <motion.button
-              key={category.title}
+              key={category.titleKey}
               initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.2 + index * 0.1 }}
@@ -79,7 +81,7 @@ export const Skills = () => {
                   : 'border border-primary/30 hover:border-primary'
               }`}
             >
-              {category.title}
+              {t(category.titleKey)}
             </motion.button>
           ))}
         </div>
@@ -129,13 +131,13 @@ export const Skills = () => {
           className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-20 max-w-5xl mx-auto"
         >
           {[
-            { number: '50+', label: 'Projects Completed' },
-            { number: '15+', label: 'Technologies Mastered' },
-            { number: '1000+', label: 'Code Commits' },
-            { number: '24/7', label: 'Learning Mode' },
+            { number: '50+', labelKey: 'skills.stats.projects' },
+            { number: '15+', labelKey: 'skills.stats.tech' },
+            { number: '1000+', labelKey: 'skills.stats.commits' },
+            { number: '24/7', labelKey: 'skills.stats.learning' },
           ].map((stat, index) => (
             <motion.div
-              key={stat.label}
+              key={stat.labelKey}
               initial={{ scale: 0 }}
               animate={inView ? { scale: 1 } : {}}
               transition={{ delay: 1 + index * 0.1, type: 'spring' }}
@@ -145,7 +147,7 @@ export const Skills = () => {
                 {stat.number}
               </div>
               <div className="text-sm text-muted-foreground font-ui">
-                {stat.label}
+                {t(stat.labelKey)}
               </div>
             </motion.div>
           ))}

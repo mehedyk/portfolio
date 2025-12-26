@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useThemeStore, themes } from '@/stores/themeStore';
 import { Navigation } from '@/components/Navigation';
 import { Hero } from '@/components/sections/Hero';
@@ -14,9 +14,22 @@ import { CommandPalette } from '@/components/CommandPalette';
 import { Footer } from '@/components/Footer';
 import { EasterEgg } from '@/components/EasterEgg';
 import { ScrollProgress } from '@/components/ScrollProgress';
+import { DataDecryptionLoader } from '@/components/DataDecryptionLoader';
+import { LanguageSelector } from '@/components/LanguageSelector';
+import { CursorTrail } from '@/components/CursorTrail';
 
 const Index = () => {
   const { theme } = useThemeStore();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate initial load with minimum 2 seconds
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 4000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const themeClass = themes.find(t => t.id === theme)?.class || '';
@@ -33,8 +46,10 @@ const Index = () => {
   }, [theme]);
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <ScrollProgress />
+    <>
+      <DataDecryptionLoader isLoading={isLoading} />
+      <div className="min-h-screen bg-background text-foreground">
+        <ScrollProgress />
       <Navigation />
       <Hero />
       <About />
@@ -46,9 +61,12 @@ const Index = () => {
       <Testimonials />
       <Contact />
       <Footer />
-      <CommandPalette />
-      <EasterEgg />
-    </div>
+        <CommandPalette />
+        <EasterEgg />
+        <LanguageSelector />
+        <CursorTrail />
+      </div>
+    </>
   );
 };
 

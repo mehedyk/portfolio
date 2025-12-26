@@ -4,6 +4,7 @@ import { Calendar, Clock, ArrowRight } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const blogPosts = [
   {
@@ -62,6 +63,8 @@ export const Blog = () => {
     threshold: 0.1,
   });
 
+  const { t } = useTranslation();
+
   return (
     <section id="blog" className="min-h-screen py-20 relative" ref={ref}>
       <div className="container mx-auto px-4" data-theme-animate>
@@ -72,11 +75,11 @@ export const Blog = () => {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-6xl font-heading mb-4 text-glow">
-            BLOG & INSIGHTS
+            {t('blog.title')}
           </h2>
           <div className="w-24 h-1 bg-primary mx-auto mb-8" />
           <p className="text-xl text-muted-foreground font-body max-w-2xl mx-auto">
-            Thoughts on tech, security, and building the future
+            {t('blog.subtitle')}
           </p>
         </motion.div>
 
@@ -140,9 +143,9 @@ export const Blog = () => {
 
                   <Button
                     variant="ghost"
-                    className="w-full justify-between group-hover:text-primary"
+                    className="w-full justify-between text-foreground hover:text-primary hover:bg-primary/10"
                   >
-                    Read More
+                    {t('blog.readMore')}
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </div>
@@ -162,7 +165,7 @@ export const Blog = () => {
             variant="outline"
             className="border-primary hover:bg-primary hover:text-primary-foreground"
           >
-            View All Posts
+            {t('blog.viewAll')}
             <ArrowRight className="ml-2 w-5 h-5" />
           </Button>
         </motion.div>

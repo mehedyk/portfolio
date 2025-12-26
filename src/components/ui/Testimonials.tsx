@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Quote, Star } from 'lucide-react';
 import { Card } from '@/components/ui/card';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const testimonials = [
   {
@@ -54,6 +55,8 @@ export const Testimonials = () => {
     threshold: 0.1,
   });
 
+  const { t } = useTranslation();
+
   return (
     <section id="testimonials" className="min-h-screen py-20 relative overflow-hidden" ref={ref}>
       {/* Background decoration */}
@@ -68,11 +71,11 @@ export const Testimonials = () => {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-6xl font-heading mb-4 text-glow">
-            TESTIMONIALS
+            {t('testimonials.title')}
           </h2>
           <div className="w-24 h-1 bg-primary mx-auto mb-8" />
           <p className="text-xl text-muted-foreground font-body max-w-2xl mx-auto">
-            What clients and colleagues say about working with me
+            {t('testimonials.subtitle')}
           </p>
         </motion.div>
 

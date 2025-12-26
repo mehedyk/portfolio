@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { GraduationCap, Briefcase, Award, Code } from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const timelineEvents = [
   {
@@ -51,6 +52,8 @@ export const Timeline = () => {
     threshold: 0.1,
   });
 
+  const { t } = useTranslation();
+
   return (
     <section id="timeline" className="min-h-screen py-20 relative overflow-hidden" ref={ref}>
       {/* Background decoration */}
@@ -64,11 +67,11 @@ export const Timeline = () => {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-6xl font-heading mb-4 text-glow">
-            MY JOURNEY
+            {t('timeline.title')}
           </h2>
           <div className="w-24 h-1 bg-primary mx-auto mb-8" />
           <p className="text-xl text-muted-foreground font-body">
-            The path from curiosity to mastery
+            {t('timeline.subtitle')}
           </p>
         </motion.div>
 
@@ -105,7 +108,7 @@ export const Timeline = () => {
                         event.type === 'work' ? 'bg-green-500/20 text-green-400' :
                         'bg-yellow-500/20 text-yellow-400'
                       }`}>
-                        {event.type}
+                        {t(`timeline.${event.type}`)}
                       </Badge>
                     </div>
                     <h3 className="text-xl font-heading mb-2 group-hover:text-primary transition-colors">

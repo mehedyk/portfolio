@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 export type ThemeType = 
+  | 'true-classic'
+  | 'classical'
   | 'cyber' 
   | 'red-alert' 
   | 'purple' 
@@ -11,7 +13,8 @@ export type ThemeType =
   | 'lime' 
   | 'ice' 
   | 'gold' 
-  | 'violet';
+  | 'blade-runner'
+  | 'monochrome';
 
 interface ThemeStore {
   theme: ThemeType;
@@ -23,7 +26,7 @@ interface ThemeStore {
 export const useThemeStore = create<ThemeStore>()(
   persist(
     (set) => ({
-      theme: 'cyber',
+      theme: 'true-classic',
       isTransitioning: false,
       setTheme: (theme) => set({ theme }),
       setIsTransitioning: (value) => set({ isTransitioning: value }),
@@ -35,14 +38,17 @@ export const useThemeStore = create<ThemeStore>()(
 );
 
 export const themes = [
-  { id: 'cyber', name: 'Cyber Hacker', class: '', icon: '⚡' },
-  { id: 'red-alert', name: 'Red Alert', class: 'theme-red-alert', icon: '🔴' },
-  { id: 'purple', name: 'Purple Haze', class: 'theme-purple', icon: '🟣' },
-  { id: 'ocean', name: 'Ocean Blue', class: 'theme-ocean', icon: '🌊' },
-  { id: 'sunset', name: 'Sunset', class: 'theme-sunset', icon: '🌅' },
-  { id: 'pink', name: 'Pink Electric', class: 'theme-pink', icon: '💖' },
-  { id: 'lime', name: 'Lime Acid', class: 'theme-lime', icon: '🟢' },
-  { id: 'ice', name: 'Ice Blue', class: 'theme-ice', icon: '❄️' },
-  { id: 'gold', name: 'Gold Luxury', class: 'theme-gold', icon: '⭐' },
-  { id: 'violet', name: 'Violet Storm', class: 'theme-violet', icon: '⚡' },
+  { id: 'true-classic', name: 'True Classic', class: '', icon: '📄' },
+  { id: 'classical', name: 'Classical', class: 'theme-classical', icon: '🏛️' },
+  { id: 'cyber', name: 'FARD', class: 'theme-cyber', icon: '⚡' },
+  { id: 'red-alert', name: 'Matrix', class: 'theme-red-alert', icon: '🔴' },
+  { id: 'purple', name: 'Fifth Element', class: 'theme-purple', icon: '🟣' },
+  { id: 'ocean', name: 'Abyss', class: 'theme-ocean', icon: '🌊' },
+  { id: 'sunset', name: 'Dune', class: 'theme-sunset', icon: '🌅' },
+  { id: 'pink', name: 'Ex Machina', class: 'theme-pink', icon: '💖' },
+  { id: 'lime', name: 'Alien', class: 'theme-lime', icon: '🟢' },
+  { id: 'ice', name: 'Interstellar', class: 'theme-ice', icon: '❄️' },
+  { id: 'gold', name: 'Star Wars', class: 'theme-gold', icon: '⭐' },
+  { id: 'blade-runner', name: 'Blade Runner 2049', class: 'theme-blade-runner', icon: '🌆' },
+  { id: 'monochrome', name: 'Sin City', class: 'theme-monochrome', icon: '◼️' },
 ] as const;

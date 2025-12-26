@@ -2,42 +2,43 @@ import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Code, Shield, Zap, Database, Cloud, Terminal } from 'lucide-react';
 import { Card } from '@/components/ui/card';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const services = [
   {
     icon: Code,
-    title: 'Web Development',
-    description: 'Building responsive, performant web applications with modern frameworks like React, Next.js, and TypeScript.',
+    titleKey: 'services.webdev.title',
+    descKey: 'services.webdev.desc',
     features: ['Full-stack development', 'API design', 'UI/UX implementation', 'Performance optimization'],
   },
   {
     icon: Shield,
-    title: 'Security Auditing',
-    description: 'Comprehensive security assessments to identify vulnerabilities and strengthen your application\'s defenses.',
+    titleKey: 'services.security.title',
+    descKey: 'services.security.desc',
     features: ['Penetration testing', 'Code review', 'OWASP compliance', 'Security training'],
   },
   {
     icon: Database,
-    title: 'Backend Architecture',
-    description: 'Designing scalable, reliable backend systems with robust database design and API development.',
+    titleKey: 'services.backend.title',
+    descKey: 'services.backend.desc',
     features: ['Database design', 'RESTful/GraphQL APIs', 'Microservices', 'Performance tuning'],
   },
   {
     icon: Cloud,
-    title: 'DevOps & Cloud',
-    description: 'Setting up CI/CD pipelines, containerization, and cloud infrastructure for seamless deployment.',
+    titleKey: 'services.devops.title',
+    descKey: 'services.devops.desc',
     features: ['Docker/Kubernetes', 'AWS/Azure setup', 'Automated deployment', 'Monitoring & logging'],
   },
   {
     icon: Zap,
-    title: 'Performance Optimization',
-    description: 'Analyzing and optimizing applications for maximum speed, efficiency, and user experience.',
+    titleKey: 'services.performance.title',
+    descKey: 'services.performance.desc',
     features: ['Code profiling', 'Load optimization', 'Caching strategies', 'CDN setup'],
   },
   {
     icon: Terminal,
-    title: 'Technical Consulting',
-    description: 'Expert guidance on technology stack selection, architecture decisions, and best practices.',
+    titleKey: 'services.consulting.title',
+    descKey: 'services.consulting.desc',
     features: ['Tech stack advice', 'Code review', 'Architecture planning', 'Team training'],
   },
 ];
@@ -47,6 +48,8 @@ export const Services = () => {
     triggerOnce: true,
     threshold: 0.1,
   });
+
+  const { t } = useTranslation();
 
   return (
     <section id="services" className="min-h-screen py-20 relative" ref={ref}>
@@ -58,18 +61,18 @@ export const Services = () => {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-6xl font-heading mb-4 text-glow">
-            SERVICES
+            {t('services.title')}
           </h2>
           <div className="w-24 h-1 bg-primary mx-auto mb-8" />
           <p className="text-xl text-muted-foreground font-body max-w-2xl mx-auto">
-            Comprehensive solutions for your digital needs
+            {t('services.subtitle')}
           </p>
         </motion.div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => (
             <motion.div
-              key={service.title}
+              key={service.titleKey}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={inView ? { opacity: 1, scale: 1 } : {}}
               transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -81,10 +84,10 @@ export const Services = () => {
                     <service.icon className="w-8 h-8 text-primary group-hover:scale-110 transition-transform" />
                   </div>
                   <h3 className="text-2xl font-heading mb-3 group-hover:text-primary transition-colors">
-                    {service.title}
+                    {t(service.titleKey)}
                   </h3>
                   <p className="text-muted-foreground font-body text-sm mb-4">
-                    {service.description}
+                    {t(service.descKey)}
                   </p>
                 </div>
 
