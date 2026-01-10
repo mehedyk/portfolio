@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 
 export type ThemeType = 
   | 'true-classic'
+  | 'monochrome'
   | 'classical'
   | 'cyber' 
   | 'red-alert' 
@@ -39,6 +40,7 @@ export const useThemeStore = create<ThemeStore>()(
 
 export const themes = [
   { id: 'true-classic', name: 'True Classic', class: '', icon: '📄' },
+  { id: 'monochrome', name: 'Sin City', class: 'theme-monochrome', icon: '◼️' },
   { id: 'classical', name: 'Classical', class: 'theme-classical', icon: '🏛️' },
   { id: 'cyber', name: 'FARD', class: 'theme-cyber', icon: '⚡' },
   { id: 'red-alert', name: 'Matrix', class: 'theme-red-alert', icon: '🔴' },
@@ -50,5 +52,4 @@ export const themes = [
   { id: 'ice', name: 'Interstellar', class: 'theme-ice', icon: '❄️' },
   { id: 'gold', name: 'Star Wars', class: 'theme-gold', icon: '⭐' },
   { id: 'blade-runner', name: 'Blade Runner 2049', class: 'theme-blade-runner', icon: '🌆' },
-  { id: 'monochrome', name: 'Sin City', class: 'theme-monochrome', icon: '◼️' },
 ] as const;
