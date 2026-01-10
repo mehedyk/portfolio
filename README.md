@@ -143,7 +143,7 @@ Edit section files in `src/components/sections/` to change:
 
 ## 📝 License
 
-**All Rights Reserved © 2024 S.M. Mehedy Kawser**
+**All Rights Reserved © 2026 S.M. Mehedy Kawser**
 
 This portfolio is personal property. Unauthorized copying, modification, distribution, or use of this code is strictly prohibited without explicit written permission from the author.
 
