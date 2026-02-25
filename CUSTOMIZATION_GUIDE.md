@@ -908,5 +908,3 @@ Tell me:
 - "Debug my [issue]"
 
 ---
-
-**Made with ❤️ using Lovable**
