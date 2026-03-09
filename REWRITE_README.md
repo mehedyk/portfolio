@@ -36,12 +36,18 @@ npm install
    - Supabase → Authentication → Users → Invite User
    - Use your own email + password
 
-### 3. Environment
+### 3. Environment variables — Netlify only, never in code
 
-```bash
-cp .env.example .env
-# Fill in VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY
-```
+**No `.env` file needed anywhere.** Set these only in Netlify:
+
+Netlify → Site → Site configuration → Environment variables → Add variable
+
+| Variable | Where to get it |
+|---|---|
+| `VITE_SUPABASE_URL` | Supabase → Settings → API → Project URL |
+| `VITE_SUPABASE_ANON_KEY` | Supabase → Settings → API → anon / public key |
+
+Locally the portfolio runs on static fallback data (your real projects, skills, etc hardcoded in `src/lib/supabase.ts`). On Netlify, after the build, it uses live Supabase data. The repo can be fully public with no secrets exposed.
 
 ### 4. Run
 
@@ -128,12 +134,16 @@ Clicking anywhere always fires a beacon pulse regardless of active effect.
 
 ---
 
-## Deployment (Vercel)
+## Deployment (Netlify — mehedy.netlify.app)
 
-1. Push to GitHub
-2. Import to Vercel
-3. Add env vars: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`
-4. Deploy
+1. Push to GitHub (safe — no secrets in repo)
+2. Netlify → Site configuration → Environment variables → add:
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+3. Trigger a redeploy — Netlify injects the vars at build time
+4. Also set your site URL in Supabase → Authentication → URL Configuration:
+   - Site URL: `https://mehedy.netlify.app`
+   - Redirect URLs: `https://mehedy.netlify.app/**`
 
 ---
 
