@@ -512,3 +512,31 @@
 .animate-glitch {
   animation: glitch 0.3s ease-in-out;
 }
+
+/* ─────────────────────────────────────────────
+   CLI / Terminal Theme
+   ───────────────────────────────────────────── */
+.theme-cli {
+  --background: 11 17 23;
+  --foreground: 0 255 65;
+  --card: 13 20 28;
+  --card-foreground: 0 255 65;
+  --primary: 0 255 65;
+  --primary-foreground: 11 17 23;
+  --secondary: 0 204 51;
+  --secondary-foreground: 11 17 23;
+  --muted: 17 26 35;
+  --muted-foreground: 0 102 34;
+  --accent: 0 255 65;
+  --accent-foreground: 11 17 23;
+  --border: 0 51 17;
+  --input: 0 51 17;
+  --ring: 0 255 65;
+  --radius: 0rem;
+  --cyber-glow: 0 255 65;
+  --shadow-cyber: 0 0 20px hsl(142 100% 50% / 0.4);
+}
+
+.theme-cli * {
+  font-family: 'JetBrains Mono', 'Courier New', monospace !important;
+}
