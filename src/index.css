@@ -517,24 +517,25 @@
    CLI / Terminal Theme
    ───────────────────────────────────────────── */
 .theme-cli {
-  --background: 11 17 23;
-  --foreground: 0 255 65;
-  --card: 13 20 28;
-  --card-foreground: 0 255 65;
-  --primary: 0 255 65;
-  --primary-foreground: 11 17 23;
-  --secondary: 0 204 51;
-  --secondary-foreground: 11 17 23;
-  --muted: 17 26 35;
-  --muted-foreground: 0 102 34;
-  --accent: 0 255 65;
-  --accent-foreground: 11 17 23;
-  --border: 0 51 17;
-  --input: 0 51 17;
-  --ring: 0 255 65;
-  --radius: 0rem;
-  --cyber-glow: 0 255 65;
-  --shadow-cyber: 0 0 20px hsl(142 100% 50% / 0.4);
+  /* Authentic Kali Linux terminal palette (dark GNOME-Terminal profile) */
+  --background: 13 17 23;
+  --foreground: 200 204 212;
+  --card: 26 31 39;
+  --card-foreground: 200 204 212;
+  --primary: 77 157 224;
+  --primary-foreground: 13 17 23;
+  --secondary: 63 220 110;
+  --secondary-foreground: 13 17 23;
+  --muted: 35 41 53;
+  --muted-foreground: 91 100 114;
+  --accent: 77 157 224;
+  --accent-foreground: 13 17 23;
+  --border: 35 41 53;
+  --input: 35 41 53;
+  --ring: 77 157 224;
+  --radius: 0.25rem;
+  --cyber-glow: 77 157 224;
+  --shadow-cyber: 0 0 20px hsl(210 65% 59% / 0.35);
 }
 
 .theme-cli * {
