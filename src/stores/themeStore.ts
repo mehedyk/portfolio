@@ -37,7 +37,15 @@ export const useThemeStore = create<ThemeStore>()(
       ghostDocked: false,
       setGhostDocked: (docked) => set({ ghostDocked: docked }),
     }),
-    { name: 'portfolio-theme' }
+    {
+      name: 'portfolio-theme',
+      partialize: (state) => ({
+        theme: state.theme,
+        cliStyle: state.cliStyle,
+        cursorEffect: state.cursorEffect,
+        // ghostDocked is intentionally NOT persisted — ghost reappears on every page refresh
+      }),
+    }
   )
 );
 

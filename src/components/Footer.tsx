@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Terminal, Heart } from 'lucide-react';
+import { Terminal } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 
 export const Footer = () => {
@@ -77,13 +77,11 @@ export const Footer = () => {
 
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-primary/20 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-muted-foreground font-ui flex items-center gap-2">
-            © {currentYear} S.M. Mehedy Kawser. {t('footer.builtWith')}
-            <Heart className="w-4 h-4 text-primary fill-primary animate-pulse" />
-            {t('footer.andCode')}
+          <p className="text-sm text-muted-foreground font-ui">
+            © {currentYear} S. M. Mehedy Kawser. All rights reserved.
           </p>
-          <p className="text-xs text-muted-foreground font-ui">
-            {t('footer.designedWith')}
+          <p className="text-xs text-muted-foreground font-mono">
+            Designed & Built by S. M. Mehedy Kawser
           </p>
         </div>
       </div>
