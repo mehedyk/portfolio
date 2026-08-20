@@ -61,6 +61,16 @@ export const Footer = () => {
                 <kbd className="px-2 py-1 bg-muted rounded text-xs">K</kbd>
                 <span className="text-primary">{t('footer.quickNav')}</span>
               </li>
+              <li>
+                <a
+                  href="https://fusesw.vercel.app/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline"
+                >
+                  FuseSW Project Showcase →
+                </a>
+              </li>
             </ul>
           </div>
         </div>

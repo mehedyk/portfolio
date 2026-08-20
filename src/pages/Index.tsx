@@ -14,19 +14,21 @@ import { CommandPalette } from '@/components/CommandPalette';
 import { Footer } from '@/components/Footer';
 import { EasterEgg } from '@/components/EasterEgg';
 import { ScrollProgress } from '@/components/ScrollProgress';
-import { DataDecryptionLoader } from '@/components/DataDecryptionLoader';
+import { Preloader } from '@/components/Preloader';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { CursorTrail } from '@/components/CursorTrail';
 import { CursorEffects } from '@/components/CursorEffects';
 import { CursorEffectsPanel } from '@/components/CursorEffectsPanel';
 import { CliTheme } from '@/components/CliTheme';
+import { GhostChatbot } from '@/components/GhostChatbot';
 
 const Index = () => {
   const { theme } = useThemeStore();
   const [isLoading, setIsLoading] = useState(true);
 
+  // Preloader auto-finishes after ~2.5s of word cycling
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 4000);
+    const timer = setTimeout(() => setIsLoading(false), 3000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -46,7 +48,7 @@ const Index = () => {
 
   return (
     <>
-      <DataDecryptionLoader isLoading={isLoading} />
+      <Preloader isLoading={isLoading} />
 
       {isCli ? (
         /* ── CLI Theme: full terminal takeover ── */
@@ -54,7 +56,7 @@ const Index = () => {
           <Navigation />
           {/* CLI occupies full screen below nav */}
           <div style={{ paddingTop: '5rem' }}>
-            <CliTheme onNavigate={scrollToSection} />
+            <CliTheme />
           </div>
           {/* Regular sections still exist below for scroll navigation */}
           <div style={{ display: 'none' }}>
@@ -67,6 +69,7 @@ const Index = () => {
           <LanguageSelector />
           <CursorEffectsPanel />
           <CursorEffects />
+          <GhostChatbot />
         </div>
       ) : (
         /* ── Normal themes ── */
@@ -89,6 +92,7 @@ const Index = () => {
           <CursorTrail />
           <CursorEffectsPanel />
           <CursorEffects />
+          <GhostChatbot />
         </div>
       )}
     </>

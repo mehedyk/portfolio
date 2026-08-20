@@ -4,19 +4,11 @@ import gsap from 'gsap';
 
 // Theme-specific cursor colors with HSL values matching each theme
 const themeColors: Record<ThemeType, string> = {
-  'true-classic': '', // No trail for true-classic
-  'classical': 'hsl(45, 80%, 55%)', // Gold
-  'cyber': 'hsl(142, 100%, 50%)', // Neon green
-  'red-alert': 'hsl(120, 100%, 50%)', // Matrix green
-  'purple': 'hsl(280, 100%, 65%)', // Vibrant purple
-  'ocean': 'hsl(200, 100%, 55%)', // Ocean blue
-  'sunset': 'hsl(35, 100%, 55%)', // Warm orange
-  'pink': 'hsl(330, 90%, 65%)', // Hot pink
-  'lime': 'hsl(90, 100%, 50%)', // Lime green
-  'ice': 'hsl(190, 100%, 70%)', // Ice cyan
-  'gold': 'hsl(45, 100%, 50%)', // Star Wars gold
-  'blade-runner': 'hsl(25, 100%, 55%)', // Blade Runner orange
-  'monochrome': 'hsl(0, 0%, 100%)', // Pure white
+  'fard': 'hsl(78, 100%, 59%)', // Lime green accent
+  'true-classic': '', // No trail for light themes
+  'sin-city': 'hsl(0, 0%, 98%)', // Pure white
+  'nordic-light': '', // No trail for light themes
+  'cli': 'hsl(210, 65%, 59%)', // Kali blue
 };
 
 interface Particle {
@@ -32,15 +24,15 @@ export const CursorTrail = () => {
   const mousePos = useRef({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(true);
 
-  // Don't render for true-classic theme
-  const isDisabled = theme === 'true-classic';
+  // Don't render for light themes
+  const isDisabled = theme === 'true-classic' || theme === 'nordic-light';
 
   useEffect(() => {
     if (isDisabled || !containerRef.current) return;
 
     const container = containerRef.current;
     const particleCount = 10;
-    const color = themeColors[theme] || themeColors['cyber'];
+    const color = themeColors[theme] || themeColors['fard'];
 
     // Create particles
     const particles: Particle[] = [];
@@ -118,7 +110,7 @@ export const CursorTrail = () => {
   useEffect(() => {
     if (isDisabled) return;
     
-    const color = themeColors[theme] || themeColors['cyber'];
+    const color = themeColors[theme] || themeColors['fard'];
     particlesRef.current.forEach((particle, i) => {
       particle.element.style.background = color;
       particle.element.style.boxShadow = `0 0 ${8 - i * 0.5}px ${color}, 0 0 ${15 - i}px ${color}40`;

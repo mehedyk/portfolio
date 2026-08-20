@@ -1,431 +1,419 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useThemeStore, CliStyleType } from '@/stores/themeStore';
+import { useState, useRef, useEffect } from 'react';
+import { useThemeStore, type CliStyleType } from '@/stores/themeStore';
+import { Minus, Square, X } from 'lucide-react';
 
-// ─── Authentic Kali Linux terminal palettes ───────────────────────────────────
-// Colors pulled from Kali's real GNOME-Terminal profiles (Default / Kali Purple / NetHunter)
-const CLI_STYLES: Record<
-  CliStyleType,
-  { bg: string; bgHeader: string; text: string; user: string; path: string; bracket: string; accent: string; dim: string; border: string; name: string }
-> = {
-  classic: {
-    // Kali "Default" — the terminal 99% of people recognize
-    bg: '#0d1117',
-    bgHeader: '#1a1f27',
-    text: '#c8ccd4',
-    user: '#3fdc6e',      // kali green (user@host)
-    path: '#4d9de0',      // kali blue (path)
-    bracket: '#8a919e',   // grey brackets/dashes
-    accent: '#4d9de0',
-    dim: '#5b6472',
-    border: '#232935',
-    name: 'Kali Default',
-  },
-  amber: {
-    // Kali Purple edition
-    bg: '#0f0a17',
-    bgHeader: '#1c1425',
-    text: '#d6cfe0',
-    user: '#c25aff',
-    path: '#9141ac',
-    bracket: '#8a7a9e',
-    accent: '#c25aff',
-    dim: '#665a75',
-    border: '#241a30',
-    name: 'Kali Purple',
-  },
-  hacker: {
-    // NetHunter-style green-on-black
-    bg: '#080b08',
-    bgHeader: '#101710',
-    text: '#c6d6c6',
-    user: '#39ff6a',
-    path: '#20c95c',
-    bracket: '#5c7a5c',
-    accent: '#39ff6a',
-    dim: '#3f5a3f',
-    border: '#152015',
-    name: 'NetHunter',
-  },
+const CLI_STYLES: Record<CliStyleType, { bg: string; text: string; prompt: string; accent: string; border: string }> = {
+  classic: { bg: '#1a1b26', text: '#c0caf5', prompt: '#7aa2f7', accent: '#73daca', border: '#2a2e3f' },
+  amber: { bg: '#1c1200', text: '#ffb86c', prompt: '#f1fa8c', accent: '#ff5555', border: '#3c2800' },
+  hacker: { bg: '#0a0e14', text: '#39ff14', prompt: '#39ff14', accent: '#00ff41', border: '#1a2e14' },
 };
 
-// ─── Section data ─────────────────────────────────────────────────────────────
+const KALI_DRAGON = [
+  '      ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄',
+  '    ██                      ██',
+  '   ██  █▄▄▄▄▄▄▄    ▄▄▄▄▄  ██',
+  '  ██   ██     ██  ██   ██  ██',
+  '  ██   ██▄▄▄▄▄██  ██▄▄▄██   ██',
+  '  ██   ██     ██  ██       ██',
+  '   ██  ██     ██  ██       ██',
+  '    ██▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄██',
+];
+
 const SECTIONS = [
-  { id: 'hero', name: 'hero', type: 'dir', size: '4096', desc: 'Home & Introduction' },
-  { id: 'about', name: 'about', type: 'dir', size: '4096', desc: 'About Me' },
-  { id: 'timeline', name: 'timeline', type: 'dir', size: '4096', desc: 'Career Journey' },
-  { id: 'skills', name: 'skills', type: 'dir', size: '4096', desc: 'Technical Skills' },
-  { id: 'projects', name: 'projects', type: 'dir', size: '4096', desc: 'Portfolio Projects' },
-  { id: 'services', name: 'services', type: 'dir', size: '4096', desc: 'Services Offered' },
-  { id: 'blog', name: 'blog', type: 'dir', size: '4096', desc: 'Blog & Insights' },
-  { id: 'testimonials', name: 'testimonials', type: 'dir', size: '4096', desc: 'Client Testimonials' },
-  { id: 'contact', name: 'contact', type: 'dir', size: '4096', desc: 'Get In Touch' },
+  { id: 'about', label: 'About' },
+  { id: 'timeline', label: 'Timeline' },
+  { id: 'skills', label: 'Skills' },
+  { id: 'projects', label: 'Projects' },
+  { id: 'services', label: 'Services' },
+  { id: 'blog', label: 'Blog' },
+  { id: 'testimonials', label: 'Testimonials' },
+  { id: 'contact', label: 'Contact' },
 ];
 
 const NEOFETCH = [
-  '       .::!!!!!!!:.        mehedyk@kali',
-  "     .:!!!!!!!!!!!!!!:.    ---------------",
-  '   :!!!!!!!!!!!!!!!!!!!:   OS: Kali GNU/Linux Portfolio',
-  "  :!!!!!!!!!!!!!!!!!!!!!:  Host: netlify/mehedy.netlify.app",
-  ' !!!!!!!!!!!!!!!!!!!!!!!!  Shell: reactsh v18",',
-  '!!!!!!!!!!!!!!!!!!!!!!!!!! Role: Software Engineering Student',
-  '!!!!!!!!!!!!!!!!!!!!!!!!!! Stack: React · TS · Vite · Tailwind',
-  '!!!!!!!!!!!!!!!!!!!!!!!!!! Focus: Security · Full Stack Dev',
-  ' !!!!!!!!!!!!!!!!!!!!!!!!  Uptime: since 2023',
-  "  :!!!!!!!!!!!!!!!!!!!!!:  ",
-  "   :!!!!!!!!!!!!!!!!!!!:   ",
-  "     '!!!!!!!!!!!!!!!'     ",
-  "        ''!!!!!''          ",
+  '',
+  ...KALI_DRAGON.map((line, i) => {
+    const info = [
+      'kawser@kali',
+      '----------',
+      'OS: Kali GNU/Linux Rolling x86_64',
+      'Host: Portfolio v2.0',
+      'Kernel: React 18.3.1 + TypeScript',
+      'Shell: zsh 5.9',
+      'Theme: Fard (Dark) [GTK2/3]',
+      'Icons: lucide-react',
+      'Terminal: GhostTerm 1.0',
+      '',
+    ];
+    return info[i] ? `${line}    ${info[i]}` : line;
+  }),
+  '',
 ];
+
+interface HistoryEntry {
+  command: string;
+  output: string[];
+}
 
 const COMMANDS: Record<string, string[]> = {
   help: [
-    'Available commands:',
-    '  ls           List all sections',
-    '  ls -la       List sections with details',
-    '  cat <sec>    Show section summary',
-    '  cd <sec>     Navigate to section',
-    '  open <sec>   Open section (scroll to it)',
-    '  whoami       Show portfolio owner info',
-    '  neofetch     Show system info',
-    '  pwd          Print working directory',
-    '  clear        Clear terminal',
-    '  style        Change terminal style',
-    '  help         Show this help',
     '',
-    'Press Ctrl+K to open command palette.',
+    'Available commands:',
+    '  help             Show this help message',
+    '  neofetch         System information',
+    '  ls               List portfolio sections',
+    '  cd <section>     Navigate to a section',
+    '  clear            Clear terminal',
+    '  whoami           Display current user',
+    '  uname -a         System information',
+    '  pwd              Print working directory',
+    '  date             Display current date',
+    '  cat /etc/issue   Display system info',
+    '  ip a             Network interfaces',
+    '  nmap             Port scan (demo)',
+    '  msfconsole       Metasploit (demo)',
+    '  sqlmap           SQL injection (demo)',
+    '  history          Command history',
+    '  theme <style>    Switch CLI style (classic/amber/hacker)',
+    '',
+    '  Tip: Press Tab for auto-completion',
+    '',
   ],
-  whoami: [
-    'S.M. Mehedy Kawser',
-    'Software Engineering Student @ Daffodil International University',
-    'Full Stack Developer | React · Supabase · Node.js',
-    'GitHub: github.com/mehedyk',
-    'Email: kawser2305341202@diu.edu.bd',
+  whoami: ['kawser'],
+  'uname -a': ['Linux kali 6.6.15-amd64 #1 SMP PREEMPT_DYNAMIC x86_64 GNU/Linux'],
+  pwd: ['/home/kawser/portfolio'],
+  date: [],
+  'cat /etc/issue': ['Kali GNU/Linux Rolling \\n \\l', ''],
+  'ip a': [
+    '1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536',
+    '    inet 127.0.0.1/8 scope host lo',
+    '2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500',
+    '    inet 192.168.1.42/24 brd 192.168.1.255 scope global',
   ],
-  pwd: ['/home/mehedyk/portfolio'],
-  sudo: ["mehedyk is not in the sudoers file. This incident will be reported. (jk, try 'help')"],
+  nmap: [
+    '',
+    'Starting Nmap 7.94SVN ( https://nmap.org )',
+    'Scanning portfolio.mehedy.dev (127.0.0.1)...',
+    '',
+    'PORT     STATE  SERVICE',
+    '22/tcp   open   ssh',
+    '80/tcp   open   http',
+    '443/tcp  open   https',
+    '3000/tcp open   dev-server',
+    '',
+    'Nmap done: 1 IP address (1 host up) scanned in 2.34s',
+    '',
+  ],
+  msfconsole: [
+    '',
+    '       =[ metasploit v6.4.1-dev ]',
+    '+ -- --=[ 2397 exploits - 1239 auxiliary ]',
+    '+ -- --=[ 422 payloads - 46 encoders ]',
+    '+ -- --=[ 11 nops - 9 evasion ]',
+    '',
+    '[*] Just kidding. This is a portfolio, not a pentest lab.',
+    '[*] But yes, I do study offensive security.',
+    '',
+  ],
+  sqlmap: [
+    '',
+    '        ___',
+    '       __H__',
+    ' ___ ___[)]_____ ___ ___  {1.8.2#stable}',
+    '|_ -| . [)]     | .\'| . |',
+    '|___|_  [.]_|_|_|__,|  _|',
+    '      |_|V...       |_|',
+    '',
+    '[!] This portfolio is NOT vulnerable to SQL injection.',
+    '[*] Because it doesn\'t use SQL. It\'s a static React app.',
+    '',
+  ],
+  history: [],
   neofetch: NEOFETCH,
-  clear: ['__CLEAR__'],
+  ls: [
+    '',
+    ...SECTIONS.map((s) => `  \x1b[34m${s.id}/\x1b[0m    ${s.label}`),
+    '',
+  ],
+  clear: [],
 };
 
-function buildLsOutput(detailed: boolean) {
-  if (!detailed) {
-    return [SECTIONS.map(s => s.name).join('  ')];
-  }
-  return [
-    `total ${SECTIONS.length * 4}`,
-    ...SECTIONS.map(s =>
-      `drwxr-xr-x  1 mehedyk  kali  ${s.size}  Mar 10 2026  ${s.name}/`
-    ),
-  ];
-}
+const TAB_COMPLETIONS = Object.keys(COMMANDS);
 
-function buildCatOutput(section: string) {
-  const sec = SECTIONS.find(s => s.name === section);
-  if (!sec) return [`cat: ${section}: No such file or directory`];
-  return [
-    `# ${sec.name.toUpperCase()}`,
-    `Type: directory`,
-    `Description: ${sec.desc}`,
-    `Usage: open ${sec.name}   # scroll to section`,
-  ];
-}
+const MOBILE_CHIPS = ['help', 'neofetch', 'ls', 'nmap', 'msfconsole', 'clear', 'whoami'];
 
-// ─── Terminal Line ────────────────────────────────────────────────────────────
-const TermLine = ({ text, color }: { text: string; color: string }) => (
-  <motion.div
-    initial={{ opacity: 0, x: -4 }}
-    animate={{ opacity: 1, x: 0 }}
-    transition={{ duration: 0.1 }}
-    style={{ color, fontFamily: "'JetBrains Mono', 'Fira Code', monospace", fontSize: '0.8rem', lineHeight: '1.55', whiteSpace: 'pre-wrap' }}
-  >
-    {text}
-  </motion.div>
-);
-
-// ─── Prompt line, Kali-style: ┌──(user㉿host)-[path] / └─$ ─────────────────────
-const PromptHeader = ({ s, path = '~' }: { s: typeof CLI_STYLES[CliStyleType]; path?: string }) => (
-  <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.8rem', lineHeight: '1.55' }}>
-    <span style={{ color: s.bracket }}>┌──(</span>
-    <span style={{ color: s.user, fontWeight: 700 }}>mehedyk</span>
-    <span style={{ color: s.bracket }}>㉿</span>
-    <span style={{ color: s.user, fontWeight: 700 }}>kali</span>
-    <span style={{ color: s.bracket }}>)-[</span>
-    <span style={{ color: s.path, fontWeight: 700 }}>{path}</span>
-    <span style={{ color: s.bracket }}>]</span>
-  </div>
-);
-
-interface CliLine {
-  type: 'prompt' | 'output' | 'error';
-  text: string;
-  cmd?: string;
-}
-
-export const CliTheme = ({ onNavigate }: { onNavigate: (id: string) => void }) => {
+export const CliTheme = () => {
   const { cliStyle, setCliStyle } = useThemeStore();
-  const s = CLI_STYLES[cliStyle];
-
-  const [lines, setLines] = useState<CliLine[]>([
-    { type: 'output', text: '╔══════════════════════════════════════════╗' },
-    { type: 'output', text: '║   mehedyk@kali — portfolio terminal      ║' },
-    { type: 'output', text: '╚══════════════════════════════════════════╝' },
-    { type: 'output', text: '' },
-    { type: 'output', text: "Type 'help' to see available commands." },
-    { type: 'output', text: "Type 'ls' to list sections." },
-    { type: 'output', text: '' },
-  ]);
+  const [history, setHistory] = useState<HistoryEntry[]>([{ command: '', output: ['Type "help" for available commands.', ''] }]);
   const [input, setInput] = useState('');
-  const [history, setHistory] = useState<string[]>([]);
-  const [histIdx, setHistIdx] = useState(-1);
-  const [styleOpen, setStyleOpen] = useState(false);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const [cmdHistory, setCmdHistory] = useState<string[]>([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-
-  // ─── Custom mouse cursor that matches the terminal's own block caret ────────
-  const cursorRef = useRef<HTMLDivElement>(null);
-  const [hovering, setHovering] = useState(false);
-
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (cursorRef.current) {
-      cursorRef.current.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
-    }
-  }, []);
+  const style = CLI_STYLES[cliStyle];
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [lines]);
+    containerRef.current?.scrollTo(0, containerRef.current.scrollHeight);
+  }, [history]);
 
-  const runCommand = (raw: string) => {
-    const cmd = raw.trim();
-    if (!cmd) return;
+  const handleCommand = (cmd: string) => {
+    const trimmed = cmd.trim().toLowerCase();
+    if (!trimmed) return;
 
-    setHistory(h => [cmd, ...h]);
-    setHistIdx(-1);
-    setInput('');
+    setCmdHistory((prev) => [...prev, trimmed]);
+    setHistoryIndex(-1);
 
-    const promptLine: CliLine = { type: 'prompt', text: cmd, cmd };
-    let outputLines: CliLine[] = [];
-
-    const parts = cmd.split(/\s+/);
-    const base = parts[0];
-    const arg = parts[1];
-
-    if (base === 'clear') {
-      setLines([]);
+    if (trimmed === 'clear') {
+      setHistory([]);
       return;
     }
 
-    if (base === 'ls') {
-      const detailed = arg === '-la' || arg === '-l';
-      const out = buildLsOutput(detailed);
-      outputLines = out.map(t => ({ type: 'output' as const, text: t }));
-    } else if (base === 'cat' && arg) {
-      const out = buildCatOutput(arg);
-      outputLines = out.map(t => ({ type: 'output' as const, text: t }));
-    } else if ((base === 'cd' || base === 'open') && arg) {
-      const sec = SECTIONS.find(se => se.name === arg);
-      if (sec) {
-        outputLines = [{ type: 'output', text: `Navigating to ${arg}...` }];
-        setTimeout(() => onNavigate(sec.id), 300);
-      } else {
-        outputLines = [{ type: 'error', text: `bash: cd: ${arg}: No such directory` }];
-      }
-    } else if (base === 'style') {
-      setStyleOpen(true);
-      outputLines = [{ type: 'output', text: 'Opening style picker...' }];
-    } else if (COMMANDS[base]) {
-      outputLines = COMMANDS[base].map(t => ({ type: 'output' as const, text: t }));
-    } else {
-      outputLines = [{ type: 'error', text: `bash: ${base}: command not found. Try 'help'.` }];
+    if (trimmed === 'date') {
+      setHistory((prev) => [
+        ...prev,
+        { command: cmd, output: [new Date().toString(), ''] },
+      ]);
+      return;
     }
 
-    setLines(prev => [...prev, promptLine, ...outputLines, { type: 'output', text: '' }]);
+    if (trimmed === 'history') {
+      setHistory((prev) => [
+        ...prev,
+        {
+          command: cmd,
+          output: ['', ...cmdHistory.map((c, i) => `  ${i + 1}  ${c}`), ''],
+        },
+      ]);
+      return;
+    }
+
+    if (trimmed.startsWith('cd ')) {
+      const section = trimmed.split(' ')[1];
+      const target = SECTIONS.find((s) => s.id === section);
+      if (target) {
+        const el = document.getElementById(target.id);
+        el?.scrollIntoView({ behavior: 'smooth' });
+        setHistory((prev) => [
+          ...prev,
+          { command: cmd, output: [`Navigating to ${target.label}...`, ''] },
+        ]);
+      } else {
+        setHistory((prev) => [
+          ...prev,
+          {
+            command: cmd,
+            output: [
+              `bash: cd: ${section}: No such directory`,
+              `Available: ${SECTIONS.map((s) => s.id).join(', ')}`,
+              '',
+            ],
+          },
+        ]);
+      }
+      return;
+    }
+
+    if (trimmed.startsWith('theme ')) {
+      const newStyle = trimmed.split(' ')[1] as CliStyleType;
+      if (['classic', 'amber', 'hacker'].includes(newStyle)) {
+        setCliStyle(newStyle);
+        setHistory((prev) => [
+          ...prev,
+          { command: cmd, output: [`Switched to ${newStyle} style.`, ''] },
+        ]);
+      } else {
+        setHistory((prev) => [
+          ...prev,
+          { command: cmd, output: ['Available styles: classic, amber, hacker', ''] },
+        ]);
+      }
+      return;
+    }
+
+    const output = COMMANDS[trimmed];
+    if (output) {
+      setHistory((prev) => [...prev, { command: cmd, output }]);
+    } else {
+      setHistory((prev) => [
+        ...prev,
+        {
+          command: cmd,
+          output: [
+            `bash: ${trimmed.split(' ')[0]}: command not found`,
+            'Type "help" for available commands.',
+            '',
+          ],
+        },
+      ]);
+    }
   };
 
-  const handleKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      runCommand(input);
+      handleCommand(input);
+      setInput('');
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      const next = Math.min(histIdx + 1, history.length - 1);
-      setHistIdx(next);
-      setInput(history[next] || '');
+      if (cmdHistory.length > 0) {
+        const newIndex = historyIndex < cmdHistory.length - 1 ? historyIndex + 1 : historyIndex;
+        setHistoryIndex(newIndex);
+        setInput(cmdHistory[cmdHistory.length - 1 - newIndex] || '');
+      }
     } else if (e.key === 'ArrowDown') {
       e.preventDefault();
-      const next = Math.max(histIdx - 1, -1);
-      setHistIdx(next);
-      setInput(next === -1 ? '' : history[next]);
+      if (historyIndex > 0) {
+        const newIndex = historyIndex - 1;
+        setHistoryIndex(newIndex);
+        setInput(cmdHistory[cmdHistory.length - 1 - newIndex] || '');
+      } else {
+        setHistoryIndex(-1);
+        setInput('');
+      }
     } else if (e.key === 'Tab') {
       e.preventDefault();
-      const partial = input.split(' ').pop() || '';
-      const match = SECTIONS.find(sec => sec.name.startsWith(partial));
-      if (match) {
-        const parts = input.split(' ');
-        parts[parts.length - 1] = match.name;
-        setInput(parts.join(' '));
+      if (input) {
+        const match = TAB_COMPLETIONS.find((c) => c.startsWith(input.toLowerCase()));
+        if (match) setInput(match);
       }
+    } else if (e.key === 'l' && e.ctrlKey) {
+      e.preventDefault();
+      setHistory([]);
     }
   };
 
-  const styles: CliStyleType[] = ['classic', 'amber', 'hacker'];
+  const Prompt = () => (
+    <span className="whitespace-nowrap">
+      <span style={{ color: style.accent }}>┌──(</span>
+      <span style={{ color: style.prompt }}>kawser💠kali</span>
+      <span style={{ color: style.accent }}>)</span>
+      <span style={{ color: style.accent }}>-[</span>
+      <span style={{ color: style.text }}>~</span>
+      <span style={{ color: style.accent }}>]</span>
+      <br />
+      <span style={{ color: style.accent }}>└─</span>
+      <span style={{ color: style.prompt }}>$</span>{' '}
+    </span>
+  );
 
   return (
-    <div
-      ref={containerRef}
-      className="min-h-screen w-full flex flex-col"
-      style={{ background: s.bg, cursor: hovering ? 'none' : 'text' }}
-      onClick={() => inputRef.current?.focus()}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={() => setHovering(true)}
-      onMouseLeave={() => setHovering(false)}
-    >
-      {/* Custom mouse cursor — identical block + blink to the real terminal caret */}
-      {hovering && (
-        <div
-          ref={cursorRef}
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '9px',
-            height: '17px',
-            background: s.accent,
-            opacity: 0.85,
-            pointerEvents: 'none',
-            zIndex: 9999,
-            mixBlendMode: 'difference',
-            animation: 'kali-cursor-blink 1s steps(1) infinite',
-          }}
-        />
-      )}
-      <style>{`
-        @keyframes kali-cursor-blink {
-          0%, 49% { opacity: 0.85; }
-          50%, 100% { opacity: 0.15; }
-        }
-      `}</style>
-
-      {/* GNOME-Terminal-style window chrome (Kali's actual DE, not macOS traffic lights) */}
+    <div className="min-h-screen flex flex-col items-center justify-start pt-20 px-4 pb-8">
       <div
-        className="sticky top-0 z-10 flex items-center justify-between px-3 py-2"
-        style={{ background: s.bgHeader, borderBottom: `1px solid ${s.border}` }}
+        className="w-full max-w-4xl rounded-lg overflow-hidden shadow-2xl"
+        style={{ border: `1px solid ${style.border}` }}
       >
-        <span style={{ color: s.dim, fontFamily: "'JetBrains Mono', monospace", fontSize: '0.72rem', letterSpacing: '0.02em' }}>
-          mehedyk@kali: ~
-        </span>
-        <div className="flex items-center gap-3">
-          {/* Style picker */}
-          <div className="relative">
-            <button
-              onClick={(e) => { e.stopPropagation(); setStyleOpen(o => !o); }}
-              style={{ color: s.dim, fontFamily: 'monospace', fontSize: '0.65rem', background: 'transparent', border: `1px solid ${s.border}`, padding: '2px 8px', borderRadius: '2px' }}
-            >
-              [{CLI_STYLES[cliStyle].name}]
-            </button>
-            <AnimatePresence>
-              {styleOpen && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  style={{ position: 'absolute', right: 0, top: '2rem', background: s.bgHeader, border: `1px solid ${s.border}`, borderRadius: '4px', overflow: 'hidden', zIndex: 50 }}
-                  onClick={e => e.stopPropagation()}
-                >
-                  {styles.map(st => (
-                    <button
-                      key={st}
-                      onClick={() => { setCliStyle(st); setStyleOpen(false); }}
-                      style={{
-                        display: 'block', width: '100%', padding: '6px 16px',
-                        textAlign: 'left', fontFamily: 'monospace', fontSize: '0.7rem',
-                        color: cliStyle === st ? CLI_STYLES[st].bg : CLI_STYLES[st].text,
-                        background: cliStyle === st ? CLI_STYLES[st].accent : 'transparent',
-                      }}
-                    >
-                      {CLI_STYLES[st].name}
-                    </button>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
+        {/* GNOME Title Bar */}
+        <div
+          className="flex items-center justify-between px-4 py-2"
+          style={{ background: style.border }}
+        >
+          <div className="flex items-center gap-3">
+            <span className="text-xs" style={{ color: style.text }}>kawser@kali: ~</span>
           </div>
-          {/* GNOME-style window controls (square, right-aligned — not macOS dots) */}
-          <div className="flex items-center gap-1">
-            <span style={{ width: '13px', height: '13px', border: `1px solid ${s.border}`, borderRadius: '2px', display: 'inline-block' }} />
-            <span style={{ width: '13px', height: '13px', border: `1px solid ${s.border}`, borderRadius: '2px', display: 'inline-block' }} />
-            <span style={{ width: '13px', height: '13px', border: `1px solid ${s.border}`, borderRadius: '2px', display: 'inline-block', background: '#e05561' }} />
+          <div className="flex items-center gap-4">
+            <button className="opacity-60 hover:opacity-100">
+              <Minus size={14} style={{ color: style.text }} />
+            </button>
+            <button className="opacity-60 hover:opacity-100">
+              <Square size={12} style={{ color: style.text }} />
+            </button>
+            <button className="opacity-60 hover:opacity-100">
+              <X size={14} style={{ color: '#ff5555' }} />
+            </button>
           </div>
         </div>
-      </div>
 
-      {/* Output area */}
-      <div className="flex-1 p-4 overflow-y-auto" style={{ minHeight: '0' }}>
-        <AnimatePresence>
-          {lines.map((line, i) =>
-            line.type === 'prompt' ? (
-              <div key={i} style={{ marginTop: '2px' }}>
-                <PromptHeader s={s} />
-                <div style={{ display: 'flex', fontFamily: "'JetBrains Mono', monospace", fontSize: '0.8rem' }}>
-                  <span style={{ color: s.bracket, marginRight: '6px' }}>└─$</span>
-                  <span style={{ color: s.text }}>{line.text}</span>
+        {/* Terminal Body */}
+        <div
+          ref={containerRef}
+          className="p-4 font-mono text-sm overflow-y-auto"
+          style={{
+            background: style.bg,
+            color: style.text,
+            minHeight: '60vh',
+            maxHeight: '75vh',
+            lineHeight: 1.6,
+          }}
+          onClick={() => inputRef.current?.focus()}
+        >
+          {/* Banner */}
+          <div style={{ color: style.accent }} className="mb-2 text-xs opacity-70">
+            Kali GNU/Linux Rolling | kawser@kali | {new Date().toLocaleDateString()}
+          </div>
+
+          {/* History */}
+          {history.map((entry, i) => (
+            <div key={i} className="mb-1">
+              {entry.command && (
+                <div className="flex flex-wrap">
+                  <Prompt />
+                  <span>{entry.command}</span>
                 </div>
-              </div>
-            ) : (
-              <TermLine key={i} text={line.text} color={line.type === 'error' ? '#e05561' : s.text} />
-            )
-          )}
-        </AnimatePresence>
+              )}
+              {entry.output.map((line, j) => (
+                <div key={j} className="whitespace-pre-wrap break-all">
+                  {line}
+                </div>
+              ))}
+            </div>
+          ))}
 
-        {/* Input line — mirrors the exact prompt style */}
-        <div style={{ marginTop: '2px' }}>
-          <PromptHeader s={s} />
-          <div className="flex items-center" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.8rem' }}>
-            <span style={{ color: s.bracket, marginRight: '6px', flexShrink: 0 }}>└─$</span>
+          {/* Input Line */}
+          <div className="flex flex-wrap items-start">
+            <Prompt />
             <input
               ref={inputRef}
               value={input}
-              onChange={e => setInput(e.target.value)}
-              onKeyDown={handleKey}
-              autoFocus
-              className="flex-1 outline-none border-none bg-transparent"
-              style={{ color: s.text, fontFamily: "'JetBrains Mono', monospace", fontSize: '0.8rem', caretColor: s.accent }}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              className="flex-1 bg-transparent outline-none min-w-[120px] caret-current"
+              style={{ color: style.text, caretColor: style.accent }}
               spellCheck={false}
-              autoComplete="off"
+              autoFocus
             />
-            <motion.span
-              animate={{ opacity: [1, 0] }}
-              transition={{ repeat: Infinity, duration: 1 }}
-              style={{ color: s.accent, marginLeft: '1px' }}
-            >
-              ▋
-            </motion.span>
           </div>
         </div>
 
-        <div ref={bottomRef} />
+        {/* Mobile Quick Action Chips */}
+        <div
+          className="flex flex-wrap gap-2 p-3 md:hidden"
+          style={{ background: style.border }}
+        >
+          {MOBILE_CHIPS.map((chip) => (
+            <button
+              key={chip}
+              onClick={() => {
+                handleCommand(chip);
+                setInput('');
+              }}
+              className="px-3 py-1.5 rounded-full text-xs font-mono transition-all hover:brightness-125"
+              style={{
+                background: style.bg,
+                color: style.accent,
+                border: `1px solid ${style.accent}40`,
+              }}
+            >
+              {chip}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* Section shortcuts */}
-      <div
-        className="flex flex-wrap gap-2 px-4 py-3"
-        style={{ borderTop: `1px solid ${s.border}`, background: s.bgHeader }}
-        onClick={e => e.stopPropagation()}
-      >
-        {SECTIONS.map(sec => (
+      {/* CLI Style Switcher */}
+      <div className="flex gap-3 mt-6">
+        {(['classic', 'amber', 'hacker'] as CliStyleType[]).map((s) => (
           <button
-            key={sec.id}
-            onClick={() => onNavigate(sec.id)}
+            key={s}
+            onClick={() => setCliStyle(s)}
+            className={`px-4 py-2 rounded-lg font-mono text-sm capitalize transition-all ${
+              cliStyle === s ? 'ring-2 ring-offset-2 scale-105' : 'opacity-60 hover:opacity-100'
+            }`}
             style={{
-              color: s.dim, fontFamily: 'monospace', fontSize: '0.65rem',
-              background: 'transparent', border: `1px solid ${s.border}`,
-              padding: '2px 8px', borderRadius: '2px', cursor: 'pointer',
+              background: CLI_STYLES[s].bg,
+              color: CLI_STYLES[s].accent,
+              ringColor: CLI_STYLES[s].accent,
             }}
-            onMouseEnter={e => { (e.target as HTMLElement).style.color = s.accent; (e.target as HTMLElement).style.borderColor = s.accent; }}
-            onMouseLeave={e => { (e.target as HTMLElement).style.color = s.dim; (e.target as HTMLElement).style.borderColor = s.border; }}
           >
-            cd {sec.name}
+            {s}
           </button>
         ))}
       </div>

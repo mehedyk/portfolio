@@ -3,20 +3,11 @@ import { useThemeStore, CursorEffectType } from '@/stores/themeStore';
 
 // ─── Theme accent colors ──────────────────────────────────────────────────────
 const themeAccent: Record<string, string> = {
-  'true-classic': '#1a1a1a',
-  'monochrome': '#ffffff',
-  'classical': '#7a9fd4',
-  'cyber': '#00ff88',
-  'red-alert': '#ff2200',
-  'purple': '#aa55ff',
-  'ocean': '#00aaff',
-  'sunset': '#ff8c00',
-  'pink': '#ff55aa',
-  'lime': '#88ff00',
-  'ice': '#aaeeff',
-  'gold': '#ffcc00',
-  'blade-runner': '#ff7722',
-  'cli': '#00ff88',
+  'fard': '#baff2e',
+  'true-classic': '#1c2938',
+  'sin-city': '#fafafa',
+  'nordic-light': '#3b82f6',
+  'cli': '#5c93c7',
 };
 
 // ─── Effect implementations ───────────────────────────────────────────────────
@@ -313,6 +304,71 @@ function injectKeyframes() {
   document.head.appendChild(style);
 }
 
+const createSwordEffect = (x: number, y: number) => {
+  // Create a small golden spark trail
+  const spark = document.createElement('div');
+  spark.style.cssText = `
+    position: fixed; left: ${x}px; top: ${y}px;
+    width: 4px; height: 4px; border-radius: 50%;
+    background: rgba(255, 215, 0, 0.8);
+    pointer-events: none; z-index: 9999;
+    box-shadow: 0 0 6px rgba(255, 215, 0, 0.6);
+    transition: all 0.4s ease;
+  `;
+  document.body.appendChild(spark);
+  requestAnimationFrame(() => {
+    spark.style.opacity = '0';
+    spark.style.transform = 'scale(0)';
+  });
+  setTimeout(() => spark.remove(), 400);
+};
+
+const createCelestialBurst = (x: number, y: number) => {
+  for (let i = 0; i < 16; i++) {
+    const particle = document.createElement('div');
+    const angle = (Math.PI * 2 * i) / 16;
+    const dist = 40 + Math.random() * 60;
+    const tx = Math.cos(angle) * dist;
+    const ty = Math.sin(angle) * dist;
+    const size = 3 + Math.random() * 5;
+    particle.style.cssText = `
+      position: fixed; left: ${x}px; top: ${y}px;
+      width: ${size}px; height: ${size}px; border-radius: 50%;
+      background: ${Math.random() > 0.5 ? 'rgba(255, 215, 0, 0.9)' : 'rgba(100, 200, 255, 0.8)'};
+      pointer-events: none; z-index: 10000;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+      transition: all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    `;
+    document.body.appendChild(particle);
+    requestAnimationFrame(() => {
+      particle.style.transform = `translate(${tx}px, ${ty}px) scale(0)`;
+      particle.style.opacity = '0';
+    });
+    setTimeout(() => particle.remove(), 700);
+  }
+};
+
+const handleSwordClick = (e: MouseEvent) => {
+  const ghostPos = (window as any).__ghostPos?.current;
+  if (ghostPos) {
+    const dx = e.clientX - ghostPos.x;
+    const dy = e.clientY - ghostPos.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    if (distance < 80) {
+      createCelestialBurst(e.clientX, e.clientY);
+      (window as any).__ghostVanish?.();
+      return;
+    }
+  }
+  // Normal click burst
+  for (let i = 0; i < 6; i++) {
+    createSwordEffect(
+      e.clientX + (Math.random() - 0.5) * 30,
+      e.clientY + (Math.random() - 0.5) * 30
+    );
+  }
+};
+
 // ─── Main component ───────────────────────────────────────────────────────────
 export const CursorEffects = () => {
   const { cursorEffect, theme } = useThemeStore();
@@ -320,6 +376,7 @@ export const CursorEffects = () => {
   const cometRef = useRef<CometTrail | null>(null);
   const historyRef = useRef<{ x: number; y: number }[]>([]);
   const cleanupMagnetic = useRef<(() => void) | null>(null);
+  const cleanupAyatul = useRef<(() => void) | null>(null);
   const throttle = useRef(0);
 
   const color = themeAccent[theme] || '#00ff88';
@@ -388,6 +445,7 @@ export const CursorEffects = () => {
     // Clear comet if switching away
     if (cometRef.current) { cometRef.current.destroy(); cometRef.current = null; }
     if (cleanupMagnetic.current) { cleanupMagnetic.current(); cleanupMagnetic.current = null; }
+    if (cleanupAyatul.current) { cleanupAyatul.current(); cleanupAyatul.current = null; }
     historyRef.current = [];
 
     if (cursorEffect === 'none') return;
@@ -401,6 +459,20 @@ export const CursorEffects = () => {
       cleanupMagnetic.current = setupMagnetic(color);
     }
 
+    if (cursorEffect === 'ayatul-qursi') {
+      const swordMoveHandler = (e: MouseEvent) => {
+        if (Math.random() > 0.7) createSwordEffect(e.clientX, e.clientY);
+      };
+      window.addEventListener('mousemove', swordMoveHandler);
+      window.addEventListener('click', handleSwordClick);
+      document.body.style.cursor = 'crosshair';
+      cleanupAyatul.current = () => {
+        window.removeEventListener('mousemove', swordMoveHandler);
+        window.removeEventListener('click', handleSwordClick);
+        document.body.style.cursor = '';
+      };
+    }
+
     document.addEventListener('mousemove', handleMove);
     document.addEventListener('click', handleClick);
 
@@ -409,6 +481,7 @@ export const CursorEffects = () => {
       document.removeEventListener('click', handleClick);
       if (cometRef.current) { cometRef.current.destroy(); cometRef.current = null; }
       if (cleanupMagnetic.current) { cleanupMagnetic.current(); cleanupMagnetic.current = null; }
+      if (cleanupAyatul.current) { cleanupAyatul.current(); cleanupAyatul.current = null; }
     };
   }, [cursorEffect, color, handleMove, handleClick]);
 
