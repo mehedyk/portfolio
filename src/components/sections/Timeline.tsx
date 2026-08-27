@@ -6,7 +6,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 const timelineEvents = [
   {
     year: '2024',
-    title: 'Senior Software Engineering Student',
+    title: 'Junior Software Engineering Student',
     organization: 'University Name',
     description: 'Specializing in cybersecurity and full-stack development. Leading multiple academic projects focused on secure application development.',
     icon: GraduationCap,

@@ -12,7 +12,7 @@ export const translations: Record<string, Record<string, string>> = {
 
     // Hero
     'hero.greeting': "Hey, I'm Mahdi Kawser",
-    'hero.title.senior': 'Senior',
+    'hero.title.senior': 'Junior',
     'hero.title.fullstack': '{Full Stack}',
     'hero.title.developer': 'Web & App developer',
     'hero.description': 'With expertise in cutting-edge technologies such as Node.JS, React, Angular, and Laravel... I deliver web solutions that are both innovative and robust.',
@@ -360,7 +360,7 @@ export const translations: Record<string, Record<string, string>> = {
     'nav.testimonials': 'Testimonios',
     'nav.contact': 'Contacto',
     'hero.greeting': 'Hola, soy Mahdi Kawser',
-    'hero.title.senior': 'Senior',
+    'hero.title.senior': 'Junior',
     'hero.title.fullstack': '{Full Stack}',
     'hero.title.developer': 'Desarrollador Web y Apps',
     'hero.description': 'Con experiencia en tecnologías de vanguardia como Node.JS, React, Angular y Laravel... ofrezco soluciones web innovadoras y robustas.',
@@ -462,7 +462,7 @@ export const translations: Record<string, Record<string, string>> = {
     'nav.testimonials': 'Referenzen',
     'nav.contact': 'Kontakt',
     'hero.greeting': 'Hey, ich bin Mahdi Kawser',
-    'hero.title.senior': 'Senior',
+    'hero.title.senior': 'Junior',
     'hero.title.fullstack': '{Full Stack}',
     'hero.title.developer': 'Web- & App-Entwickler',
     'hero.description': 'Mit Expertise in modernen Technologien wie Node.JS, React, Angular und Laravel... liefere ich innovative und robuste Web-Lösungen.',

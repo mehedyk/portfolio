@@ -154,7 +154,7 @@ src/
 ## 🎨 Theme Configuration
 
 Themes are defined in `src/index.css` with HSL color tokens for maximum flexibility. Each theme includes:
-- Background colors
+- Background color
 - Foreground colors
 - Primary/secondary colors
 - Border colors
