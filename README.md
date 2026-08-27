@@ -145,6 +145,6 @@ I'm always open to discussing new projects, creative ideas, or opportunities to 
 
 ## 📄 License
 
-**All Rights Reserved © 2026 S.M. Mehedy Kawser.**
+**All Rights Reserved © 2026 S. M. Mehedy Kawser.**
 
 This repository and its source code are the intellectual property of S.M. Mehedy Kawser. You may not reproduce, distribute, or create derivative works without explicit written permission.
