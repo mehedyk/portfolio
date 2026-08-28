@@ -21,8 +21,10 @@ import { CursorEffects } from '@/components/CursorEffects';
 import { CursorEffectsPanel } from '@/components/CursorEffectsPanel';
 import { CliTheme } from '@/components/CliTheme';
 import { GhostChatbot } from '@/components/GhostChatbot';
+import { useVisitorTracker } from '@/hooks/useVisitorTracker';
 
 const Index = () => {
+  useVisitorTracker();
   const { theme } = useThemeStore();
   const [isLoading, setIsLoading] = useState(true);
 

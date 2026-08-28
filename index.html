@@ -61,6 +61,55 @@
 
   <body>
     <div id="root"></div>
+
+    <!-- Easter Egg & Anti-Inspect Script -->
+    <script>
+      const asciiArt = `
+███╗   ███╗███████╗██╗  ██╗███████╗██████╗ ██╗   ██╗
+████╗ ████║██╔════╝██║  ██║██╔════╝██╔══██╗╚██╗ ██╔╝
+██╔████╔██║█████╗  ███████║█████╗  ██║  ██║ ╚████╔╝ 
+██║╚██╔╝██║██╔══╝  ██╔══██║██╔══╝  ██║  ██║  ╚██╔╝  
+██║ ╚═╝ ██║███████╗██║  ██║███████╗██████╔╝   ██║   
+╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚═════╝    ╚═╝   `;
+      
+      const s1 = 'color: #f1fa8c; font-weight: bold; font-family: monospace; text-shadow: 2px 2px 0px #bd93f9;';
+      const sTitle = 'color: #ff79c6; font-weight: bold; font-family: monospace; font-size: 13px;';
+      const sText = 'color: #f8f8f2; font-family: monospace; font-size: 12px; line-height: 1.5;';
+      const sLink = 'color: #8be9fd; font-family: monospace; font-size: 12px; text-decoration: underline; line-height: 1.5;';
+      const sGreen = 'color: #50fa7b; font-family: monospace; font-size: 12px; line-height: 1.5;';
+      
+      console.log("%c" + asciiArt, s1);
+      
+      console.log(
+        "%c┌ Hello there\n│ You sneaky developer! Thanks for visiting my portfolio.\n│ S. M. Mehedy Kawser - competitive programmer,\n│ full-stack developer & AI engineer.\n└─────────────────────────────────────────────────────", 
+        sText
+      );
+      
+      console.log("%c\n┌ Socials", sTitle);
+      console.log("%c│ Mail     → %ckawser2305341202@diu.edu.bd", sText, sLink);
+      console.log("%c│ GitHub   → %chttps://github.com/mehedyk", sText, sLink);
+      console.log("%c│ LinkedIn → %chttps://www.linkedin.com/in/mehedyk/", sText, sLink);
+      console.log("%c│ Facebook → %chttps://www.facebook.com/mahdi.kawser", sText, sLink);
+      console.log("%c└─────────────────────────────────────────────────────", sText);
+      
+      console.log("%c\n┌ Tech Stack", sTitle);
+      console.log("%c│ Frontend → React, JSX/TSX, TailwindCSS\n│ Backend  → Node.js, Python, Supabase\n│ Languages→ C++, Python, JavaScript, TypeScript\n│ Tools    → Vite, Git, Vercel, Netlify\n└─────────────────────────────────────────────────────", sText);
+      
+      console.log("%c\n┌ Debug\n│ Add #debug at the end of the URL and reload.\n│ Press [V] to toggle free camera.\n└─────────────────────────────────────────────────────", sText);
+      
+      console.log("%c\n┌ Built with\n│ React 18, Three.js, Framer Motion\n│ Theme inspired by Kali Linux & retro CRT\n└─────────────────────────────────────────────────────", sGreen);
+
+      // Anti-Inspect Protection
+      document.addEventListener('contextmenu', (e) => e.preventDefault());
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'F12') e.preventDefault();
+        if (e.ctrlKey && e.shiftKey && e.key === 'I') e.preventDefault();
+        if (e.ctrlKey && e.shiftKey && e.key === 'J') e.preventDefault();
+        if (e.ctrlKey && e.shiftKey && e.key === 'C') e.preventDefault();
+        if (e.ctrlKey && e.key === 'U') e.preventDefault();
+      });
+    </script>
+
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

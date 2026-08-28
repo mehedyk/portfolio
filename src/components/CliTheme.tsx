@@ -296,9 +296,14 @@ export const CliTheme = () => {
   );
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-start pt-20 px-4 pb-8">
+    <div className="min-h-screen flex flex-col items-center justify-start pt-20 px-4 pb-8 relative overflow-hidden">
+      {/* CRT Effects from zz.html aesthetic */}
+      <div className="pointer-events-none fixed inset-0 z-50 opacity-10 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%] animate-[scan_6s_linear_infinite]" />
+      <div className="pointer-events-none fixed inset-0 z-[51] bg-[radial-gradient(ellipse_110%_100%_at_center,transparent_45%,rgba(0,0,0,0.55)_100%)]" />
+      <div className="pointer-events-none fixed inset-0 z-[52] opacity-10 bg-[rgba(255,184,108,0.018)] animate-[flicker_7s_infinite]" />
+      
       <div
-        className="w-full max-w-4xl rounded-lg overflow-hidden shadow-2xl"
+        className="w-full max-w-4xl rounded-lg overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.8)] relative z-10"
         style={{ border: `1px solid ${style.border}` }}
       >
         {/* GNOME Title Bar */}

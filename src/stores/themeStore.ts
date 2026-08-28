@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-export type ThemeType = 'fard' | 'true-classic' | 'sin-city' | 'nordic-light' | 'cli';
+export type ThemeType = 'fard' | 'true-classic' | 'monolith' | 'nordic-light' | 'cli';
 
 export type CliStyleType = 'classic' | 'amber' | 'hacker';
 
@@ -52,7 +52,7 @@ export const useThemeStore = create<ThemeStore>()(
 export const themes = [
   { id: 'fard', name: 'Fard', class: 'theme-fard', icon: '⚡' },
   { id: 'true-classic', name: 'True Classic', class: 'theme-true-classic', icon: '📄' },
-  { id: 'sin-city', name: 'Sin City', class: 'theme-sin-city', icon: '◼️' },
+  { id: 'monolith', name: 'Monolith', class: 'theme-monolith', icon: '◼️' },
   { id: 'nordic-light', name: 'Nordic Light', class: 'theme-nordic-light', icon: '❄️' },
   { id: 'cli', name: 'Terminal', class: 'theme-cli', icon: '💻' },
 ] as const;
