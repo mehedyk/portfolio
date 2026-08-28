@@ -1,19 +1,64 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from './button';
 import { Input } from './input';
 import { cn } from '@/lib/utils';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { AdminDashboard } from '@/components/AdminDashboard';
 import {
-  AppleIcon,
   AtSignIcon,
   ChevronLeftIcon,
-  GithubIcon,
   Grid2x2PlusIcon,
+  KeyIcon,
+  Loader2Icon,
 } from 'lucide-react';
 
 export function AuthPage() {
+  const [session, setSession] = useState<any>(null);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+
+  useEffect(() => {
+    if (!isSupabaseConfigured) return;
+    
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isSupabaseConfigured) {
+      setErrorMsg('Supabase environment variables are missing. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your Netlify settings.');
+      return;
+    }
+    
+    setLoading(true);
+    setErrorMsg('');
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error) setErrorMsg(error.message);
+    setLoading(false);
+  };
+
+  if (session) {
+    return <AdminDashboard />;
+  }
+
   return (
     <main className="relative md:h-screen md:overflow-hidden lg:grid lg:grid-cols-2 bg-background text-foreground z-[9999] fixed inset-0 w-full h-full">
       <div className="bg-muted/60 relative hidden h-full flex-col border-r p-10 lg:flex">
@@ -60,46 +105,49 @@ export function AuthPage() {
           </div>
           <div className="flex flex-col space-y-1">
             <h1 className="font-heading text-2xl font-bold tracking-wide">
-              Sign In or Join Now!
+              Secure Access
             </h1>
             <p className="text-muted-foreground text-base">
-              login or create your hero account.
+              Authorized personnel only.
             </p>
           </div>
-          <div className="space-y-2">
-            <Button type="button" size="lg" className="w-full">
-              <GoogleIcon className='size-4 me-2' />
-              Continue with Google
-            </Button>
-            <Button type="button" size="lg" className="w-full">
-              <AppleIcon className='size-4 me-2' />
-              Continue with Apple
-            </Button>
-            <Button type="button" size="lg" className="w-full">
-              <GithubIcon className='size-4 me-2' />
-              Continue with GitHub
-            </Button>
-          </div>
 
-          <AuthSeparator />
-
-          <form className="space-y-2">
+          <form className="space-y-2 mt-8" onSubmit={handleLogin}>
             <p className="text-muted-foreground text-start text-xs">
-              Enter your email address to sign in or create an account
+              Enter your admin credentials to securely log in.
             </p>
+            {errorMsg && <p className="text-destructive text-sm font-semibold">{errorMsg}</p>}
             <div className="relative h-max">
               <Input
-                placeholder="your.email@example.com"
+                placeholder="admin@example.com"
                 className="peer ps-9"
                 type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
               />
               <div className="text-muted-foreground pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
                 <AtSignIcon className="size-4" aria-hidden="true" />
               </div>
             </div>
+            
+            <div className="relative h-max mt-2">
+              <Input
+                placeholder="Password"
+                className="peer ps-9"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <div className="text-muted-foreground pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
+                <KeyIcon className="size-4" aria-hidden="true" />
+              </div>
+            </div>
 
-            <Button type="button" className="w-full">
-              <span>Continue With Email</span>
+            <Button type="submit" className="w-full mt-4" disabled={loading}>
+              {loading ? <Loader2Icon className="animate-spin w-4 h-4 mr-2" /> : null}
+              <span>Authenticate</span>
             </Button>
           </form>
           <p className="text-muted-foreground mt-8 text-sm">
@@ -142,7 +190,7 @@ function FloatingPaths({ position }: { position: number }) {
   return (
     <div className="pointer-events-none absolute inset-0">
       <svg
-        className="h-full w-full text-slate-950 dark:text-white"
+        className="h-full w-full text-foreground/20"
         viewBox="0 0 696 316"
         fill="none"
       >
@@ -172,25 +220,4 @@ function FloatingPaths({ position }: { position: number }) {
   );
 }
 
-const GoogleIcon = (props: React.ComponentProps<'svg'>) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    {...props}
-  >
-    <g>
-      <path d="M12.479,14.265v-3.279h11.049c0.108,0.571,0.164,1.247,0.164,1.979c0,2.46-0.672,5.502-2.84,7.669   C18.744,22.829,16.051,24,12.483,24C5.869,24,0.308,18.613,0.308,12S5.869,0,12.483,0c3.659,0,6.265,1.436,8.223,3.307L18.392,5.62   c-1.404-1.317-3.307-2.341-5.913-2.341C7.65,3.279,3.873,7.171,3.873,12s3.777,8.721,8.606,8.721c3.132,0,4.916-1.258,6.059-2.401   c0.927-0.927,1.537-2.251,1.777-4.059L12.479,14.265z" />
-    </g>
-  </svg>
-);
-
-const AuthSeparator = () => {
-  return (
-    <div className="flex w-full items-center justify-center">
-      <div className="bg-border h-px w-full" />
-      <span className="text-muted-foreground px-2 text-xs">OR</span>
-      <div className="bg-border h-px w-full" />
-    </div>
-  );
-};
+// Unused components removed
