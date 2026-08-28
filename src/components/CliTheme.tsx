@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useThemeStore, type CliStyleType } from '@/stores/themeStore';
 import { Minus, Square, X } from 'lucide-react';
+import { ThemeCycleButton } from '@/components/ThemeCycleButton';
 
 const CLI_STYLES: Record<CliStyleType, { bg: string; text: string; prompt: string; accent: string; border: string }> = {
   classic: { bg: '#1a1b26', text: '#c0caf5', prompt: '#7aa2f7', accent: '#73daca', border: '#2a2e3f' },
@@ -303,7 +304,7 @@ export const CliTheme = () => {
       </div>
 
       {/* Status Bar from zz.html */}
-      <header className="flex justify-between items-center px-4 py-1.5 border-b border-[#1d2530] text-[11px] text-[#6b7585] shrink-0 select-none tracking-wide z-10"
+      <header className="flex justify-between items-center px-4 py-1.5 border-b border-[#1d2530] text-[11px] text-[#6b7585] shrink-0 select-none tracking-wide z-10 relative"
               style={{ background: 'linear-gradient(to bottom, #0e1217, #0a0d11)' }}>
         <div className="flex gap-4 items-center">
           <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
@@ -314,15 +315,19 @@ export const CliTheme = () => {
             pwd: <b className="text-[#ffb86c] font-medium">~</b>
           </span>
         </div>
-        <div className="flex gap-4 items-center">
+        <div className="flex gap-4 items-center relative z-50">
           <span className="inline-flex items-center gap-1 whitespace-nowrap hidden md:inline-flex">
-            theme: <b className="text-[#ffb86c] font-medium">{cliStyle}</b>
+            cli-style: <b className="text-[#ffb86c] font-medium">{cliStyle}</b>
           </span>
           <span className="inline-flex items-center gap-1 whitespace-nowrap hidden sm:inline-flex">
             crt: <b className="text-[#ffb86c] font-medium">on</b>
           </span>
-          <span className="inline-flex items-center gap-1 whitespace-nowrap">
-            <b className="text-[#ffb86c] font-medium">{new Date().toLocaleTimeString([], { hour12: false })}</b>
+          <span className="inline-flex items-center gap-2 whitespace-nowrap ml-2">
+            <span className="opacity-50">|</span>
+            <span className="font-bold text-white mr-1">Global Theme:</span>
+            <div className="scale-75 origin-right pointer-events-auto flex">
+              <ThemeCycleButton />
+            </div>
           </span>
         </div>
       </header>
