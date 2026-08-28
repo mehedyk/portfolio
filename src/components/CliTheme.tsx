@@ -282,143 +282,119 @@ export const CliTheme = () => {
   };
 
   const Prompt = () => (
-    <span className="whitespace-nowrap">
-      <span style={{ color: style.accent }}>┌──(</span>
-      <span style={{ color: style.prompt }}>kawser💠kali</span>
-      <span style={{ color: style.accent }}>)</span>
-      <span style={{ color: style.accent }}>-[</span>
-      <span style={{ color: style.text }}>~</span>
-      <span style={{ color: style.accent }}>]</span>
-      <br />
-      <span style={{ color: style.accent }}>└─</span>
-      <span style={{ color: style.prompt }}>$</span>{' '}
+    <span className="whitespace-nowrap text-[#4ade80] font-medium" style={{ textShadow: '0 0 8px rgba(74, 222, 128, 0.45)' }}>
+      user@portfolio<span className="text-[#67e8f9]" style={{ textShadow: '0 0 6px rgba(103, 232, 249, 0.4)' }}>:~</span>$
     </span>
   );
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-start pt-20 px-4 pb-8 relative overflow-hidden">
-      {/* CRT Effects from zz.html aesthetic */}
-      <div className="pointer-events-none fixed inset-0 z-50 opacity-10 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%] animate-[scan_6s_linear_infinite]" />
-      <div className="pointer-events-none fixed inset-0 z-[51] bg-[radial-gradient(ellipse_110%_100%_at_center,transparent_45%,rgba(0,0,0,0.55)_100%)]" />
-      <div className="pointer-events-none fixed inset-0 z-[52] opacity-10 bg-[rgba(255,184,108,0.018)] animate-[flicker_7s_infinite]" />
+    <div className="h-full w-full flex flex-col relative bg-[#050709] text-[#d8d4ce] font-mono overflow-hidden">
+      {/* CRT Overlay from zz.html */}
+      <div className="pointer-events-none fixed inset-0 z-[100] transition-opacity duration-400">
+        <div className="absolute inset-0 opacity-55 animate-[scan_6s_linear_infinite]" 
+             style={{ background: 'repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0px, rgba(0,0,0,0) 2px, rgba(0,0,0,0.32) 3px, rgba(0,0,0,0.32) 4px)' }}></div>
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_110%_100%_at_center,transparent_45%,rgba(0,0,0,0.55)_100%)]"></div>
+        <div className="absolute inset-0 bg-[rgba(255,184,108,0.018)] animate-[flicker_7s_infinite]"></div>
+      </div>
       
-      <div
-        className="w-full max-w-4xl rounded-lg overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.8)] relative z-10"
-        style={{ border: `1px solid ${style.border}` }}
-      >
-        {/* GNOME Title Bar */}
-        <div
-          className="flex items-center justify-between px-4 py-2"
-          style={{ background: style.border }}
-        >
-          <div className="flex items-center gap-3">
-            <span className="text-xs" style={{ color: style.text }}>kawser@kali: ~</span>
-          </div>
-          <div className="flex items-center gap-4">
-            <button className="opacity-60 hover:opacity-100">
-              <Minus size={14} style={{ color: style.text }} />
-            </button>
-            <button className="opacity-60 hover:opacity-100">
-              <Square size={12} style={{ color: style.text }} />
-            </button>
-            <button className="opacity-60 hover:opacity-100">
-              <X size={14} style={{ color: '#ff5555' }} />
-            </button>
-          </div>
+      {/* Film grain noise */}
+      <div className="pointer-events-none fixed inset-0 z-[99] opacity-[0.06] mix-blend-overlay"
+           style={{ backgroundImage: "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/></filter><rect width='200' height='200' filter='url(%23n)' opacity='0.5'/></svg>\")" }}>
+      </div>
+
+      {/* Status Bar from zz.html */}
+      <header className="flex justify-between items-center px-4 py-1.5 border-b border-[#1d2530] text-[11px] text-[#6b7585] shrink-0 select-none tracking-wide z-10"
+              style={{ background: 'linear-gradient(to bottom, #0e1217, #0a0d11)' }}>
+        <div className="flex gap-4 items-center">
+          <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
+            <span className="inline-block w-[7px] h-[7px] rounded-full bg-[#4ade80] shadow-[0_0_7px_#4ade80] animate-[pulse_2s_ease-in-out_infinite]"></span>
+            kawser@portfolio
+          </span>
+          <span className="inline-flex items-center gap-1 whitespace-nowrap hidden sm:inline-flex">
+            pwd: <b className="text-[#ffb86c] font-medium">~</b>
+          </span>
         </div>
+        <div className="flex gap-4 items-center">
+          <span className="inline-flex items-center gap-1 whitespace-nowrap hidden md:inline-flex">
+            theme: <b className="text-[#ffb86c] font-medium">{cliStyle}</b>
+          </span>
+          <span className="inline-flex items-center gap-1 whitespace-nowrap hidden sm:inline-flex">
+            crt: <b className="text-[#ffb86c] font-medium">on</b>
+          </span>
+          <span className="inline-flex items-center gap-1 whitespace-nowrap">
+            <b className="text-[#ffb86c] font-medium">{new Date().toLocaleTimeString([], { hour12: false })}</b>
+          </span>
+        </div>
+      </header>
 
-        {/* Terminal Body */}
-        <div
-          ref={containerRef}
-          className="p-4 font-mono text-sm overflow-y-auto"
-          style={{
-            background: style.bg,
-            color: style.text,
-            minHeight: '60vh',
-            maxHeight: '75vh',
-            lineHeight: 1.6,
-          }}
-          onClick={() => inputRef.current?.focus()}
-        >
-          {/* Banner */}
-          <div style={{ color: style.accent }} className="mb-2 text-xs opacity-70">
-            Kali GNU/Linux Rolling | kawser@kali | {new Date().toLocaleDateString()}
+      {/* Terminal Body */}
+      <main
+        ref={containerRef}
+        className="flex-1 flex flex-col min-h-0 p-4 md:p-5 relative overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-track-transparent scrollbar-thumb-[#1d2530] hover:scrollbar-thumb-[#6b7585] z-10"
+        style={{
+          background: 'radial-gradient(ellipse 80% 50% at top, rgba(255, 184, 108, 0.05), transparent 70%), radial-gradient(ellipse 60% 40% at bottom, rgba(103, 232, 249, 0.025), transparent 70%), #050709',
+          color: style.text,
+          fontSize: '14px',
+          lineHeight: '1.55'
+        }}
+        onClick={() => inputRef.current?.focus()}
+      >
+        {/* History */}
+        {history.map((entry, i) => (
+          <div key={i} className="mb-1">
+            {entry.command && (
+              <div className="flex flex-wrap items-center gap-2 pt-1">
+                <Prompt />
+                <span className="text-[#d8d4ce]">{entry.command}</span>
+              </div>
+            )}
+            {entry.output.map((line, j) => (
+              <div key={j} className="whitespace-pre-wrap break-word mb-[2px]">
+                {line}
+              </div>
+            ))}
           </div>
+        ))}
 
-          {/* History */}
-          {history.map((entry, i) => (
-            <div key={i} className="mb-1">
-              {entry.command && (
-                <div className="flex flex-wrap">
-                  <Prompt />
-                  <span>{entry.command}</span>
-                </div>
-              )}
-              {entry.output.map((line, j) => (
-                <div key={j} className="whitespace-pre-wrap break-all">
-                  {line}
-                </div>
-              ))}
+        {/* Input Line */}
+        <div className="flex items-center gap-2 pt-2 border-t border-[#0e1217] mt-1 relative shrink-0">
+          <Prompt />
+          <div className="relative flex-1 min-w-0 flex items-center">
+            {/* Fake input display for cursor */}
+            <div className="pointer-events-none text-[#d8d4ce] whitespace-pre">
+              {input}<span className="inline-block w-[8px] h-[17px] bg-[#ffb86c] align-text-bottom shadow-[0_0_8px_#ffb86c] animate-[blink_1.06s_steps(2,end)_infinite] mx-[1px]"></span>
             </div>
-          ))}
-
-          {/* Input Line */}
-          <div className="flex flex-wrap items-start">
-            <Prompt />
+            {/* Invisible real input */}
             <input
               ref={inputRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              className="flex-1 bg-transparent outline-none min-w-[120px] caret-current"
-              style={{ color: style.text, caretColor: style.accent }}
+              className="absolute inset-0 w-full h-full bg-transparent border-none outline-none text-transparent caret-transparent p-0 z-[2] cursor-text"
               spellCheck={false}
               autoFocus
             />
           </div>
         </div>
+      </main>
 
-        {/* Mobile Quick Action Chips */}
-        <div
-          className="flex flex-wrap gap-2 p-3 md:hidden"
-          style={{ background: style.border }}
-        >
-          {MOBILE_CHIPS.map((chip) => (
-            <button
-              key={chip}
-              onClick={() => {
-                handleCommand(chip);
-                setInput('');
-              }}
-              className="px-3 py-1.5 rounded-full text-xs font-mono transition-all hover:brightness-125"
-              style={{
-                background: style.bg,
-                color: style.accent,
-                border: `1px solid ${style.accent}40`,
-              }}
-            >
-              {chip}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* CLI Style Switcher */}
-      <div className="flex gap-3 mt-6">
-        {(['classic', 'amber', 'hacker'] as CliStyleType[]).map((s) => (
+      {/* Mobile Quick Action Chips */}
+      <div className="flex flex-wrap gap-2 p-3 border-t border-[#1d2530] bg-[#0a0d11] md:hidden z-10 shrink-0">
+        {MOBILE_CHIPS.map((chip) => (
           <button
-            key={s}
-            onClick={() => setCliStyle(s)}
-            className={`px-4 py-2 rounded-lg font-mono text-sm capitalize transition-all ${
-              cliStyle === s ? 'ring-2 ring-offset-2 scale-105' : 'opacity-60 hover:opacity-100'
-            }`}
+            key={chip}
+            onClick={() => {
+              handleCommand(chip);
+              setInput('');
+            }}
+            className="px-3 py-1.5 rounded text-xs font-mono transition-all hover:brightness-125"
             style={{
-              background: CLI_STYLES[s].bg,
-              color: CLI_STYLES[s].accent,
-              ringColor: CLI_STYLES[s].accent,
+              background: '#0e1217',
+              color: style.accent,
+              border: `1px solid ${style.border}`,
             }}
           >
-            {s}
+            {chip}
           </button>
         ))}
       </div>

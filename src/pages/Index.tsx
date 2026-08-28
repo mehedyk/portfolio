@@ -54,18 +54,12 @@ const Index = () => {
 
       {isCli ? (
         /* ── CLI Theme: full terminal takeover ── */
-        <div className="min-h-screen bg-background text-foreground">
-          <Navigation />
-          {/* CLI occupies full screen below nav */}
-          <div style={{ paddingTop: '5rem' }}>
-            <CliTheme />
-          </div>
-          {/* Regular sections still exist below for scroll navigation */}
+        <div className="h-screen w-screen overflow-hidden">
+          <CliTheme />
           <div style={{ display: 'none' }}>
             <Hero /><About /><Timeline /><Skills />
             <Projects /><Services /><Blog /><Testimonials /><Contact />
           </div>
-          <Footer />
           <CommandPalette />
           <EasterEgg />
           <LanguageSelector />

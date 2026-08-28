@@ -190,7 +190,7 @@ function FloatingPaths({ position }: { position: number }) {
   return (
     <div className="pointer-events-none absolute inset-0">
       <svg
-        className="h-full w-full text-foreground/20"
+        className="h-full w-full text-primary opacity-80 filter drop-shadow-[0_0_15px_hsl(var(--primary))] "
         viewBox="0 0 696 316"
         fill="none"
       >
