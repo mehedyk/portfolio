@@ -2,156 +2,55 @@ import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { useState } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
-
-const skillCategories = [
-  {
-    titleKey: 'skills.category.frontend',
-    skills: [
-      { name: 'React/Next.js', level: 95 },
-      { name: 'TypeScript', level: 90 },
-      { name: 'Tailwind CSS', level: 95 },
-      { name: 'Framer Motion', level: 85 },
-    ],
-  },
-  {
-    titleKey: 'skills.category.backend',
-    skills: [
-      { name: 'Node.js/Express', level: 90 },
-      { name: 'Python/Django', level: 85 },
-      { name: 'PostgreSQL', level: 88 },
-      { name: 'GraphQL', level: 80 },
-    ],
-  },
-  {
-    titleKey: 'skills.category.security',
-    skills: [
-      { name: 'Penetration Testing', level: 85 },
-      { name: 'Network Security', level: 82 },
-      { name: 'Cryptography', level: 80 },
-      { name: 'OWASP Top 10', level: 90 },
-    ],
-  },
-  {
-    titleKey: 'skills.category.devops',
-    skills: [
-      { name: 'Docker/Kubernetes', level: 85 },
-      { name: 'AWS/Azure', level: 80 },
-      { name: 'CI/CD Pipelines', level: 88 },
-      { name: 'Linux/Bash', level: 92 },
-    ],
-  },
-];
+import { SKILL_GROUPS } from '@/data/profile';
 
 export const Skills = () => {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
-
-  const [activeCategory, setActiveCategory] = useState(0);
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
+  const [active, setActive] = useState(0);
   const { t } = useTranslation();
+  const group = SKILL_GROUPS[active];
 
   return (
-    <section id="skills" className="min-h-screen py-20 relative" ref={ref}>
+    <section id="skills" className="py-20 relative" ref={ref}>
       <div className="container mx-auto px-4" data-theme-animate>
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          initial={{ opacity: 0, y: 50 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6 }}
+          className="text-center mb-12"
         >
-          <h2 className="text-4xl md:text-6xl font-heading mb-4 text-glow">
-            {t('skills.title')}
-          </h2>
+          <h2 className="text-4xl md:text-6xl font-heading mb-4 text-glow">{t('skills.title')}</h2>
           <div className="w-24 h-1 bg-primary mx-auto" />
         </motion.div>
 
-        {/* Category Tabs */}
-        <div className="flex flex-wrap justify-center gap-4 mb-12">
-          {skillCategories.map((category, index) => (
-            <motion.button
-              key={category.titleKey}
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.2 + index * 0.1 }}
-              onClick={() => setActiveCategory(index)}
-              className={`px-6 py-3 rounded-lg font-ui transition-all duration-300 ${
-                activeCategory === index
-                  ? 'bg-primary text-primary-foreground border-glow'
-                  : 'border border-primary/30 hover:border-primary'
+        <div role="tablist" aria-label="Skill categories" className="flex flex-wrap justify-center gap-3 mb-12">
+          {SKILL_GROUPS.map((g, i) => (
+            <button
+              key={g.key} role="tab" aria-selected={active === i} onClick={() => setActive(i)}
+              className={`px-5 py-2.5 rounded-lg font-ui text-sm transition-all duration-300 ${
+                active === i ? 'bg-primary text-primary-foreground border-glow' : 'border border-primary/30 hover:border-primary'
               }`}
             >
-              {t(category.titleKey)}
-            </motion.button>
+              {t(g.titleKey)}
+            </button>
           ))}
         </div>
 
-        {/* Skills Display */}
-        <motion.div
-          key={activeCategory}
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -50 }}
-          transition={{ duration: 0.5 }}
-          className="max-w-4xl mx-auto"
+        <motion.ul
+          key={group.key} role="tabpanel"
+          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}
+          className="mx-auto grid max-w-4xl grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4"
         >
-          <div className="grid gap-6">
-            {skillCategories[activeCategory].skills.map((skill, index) => (
-              <motion.div
-                key={skill.name}
-                initial={{ opacity: 0, x: -30 }}
-                animate={inView ? { opacity: 1, x: 0 } : {}}
-                transition={{ delay: 0.4 + index * 0.1 }}
-                className="group"
-              >
-                <div className="flex justify-between mb-2">
-                  <span className="font-ui text-lg">{skill.name}</span>
-                  <span className="text-primary font-heading">{skill.level}%</span>
-                </div>
-                <div className="h-3 bg-muted rounded-full overflow-hidden">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={inView ? { width: `${skill.level}%` } : {}}
-                    transition={{ duration: 1, delay: 0.5 + index * 0.1, ease: 'easeOut' }}
-                    className="h-full bg-gradient-to-r from-primary to-secondary rounded-full relative group-hover:shadow-[0_0_20px_hsl(var(--primary))] transition-shadow"
-                  >
-                    <div className="absolute inset-0 bg-white/20 animate-pulse" />
-                  </motion.div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Stats Counter */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.8 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-20 max-w-5xl mx-auto"
-        >
-          {[
-            { number: '50+', labelKey: 'skills.stats.projects' },
-            { number: '15+', labelKey: 'skills.stats.tech' },
-            { number: '1000+', labelKey: 'skills.stats.commits' },
-            { number: '24/7', labelKey: 'skills.stats.learning' },
-          ].map((stat, index) => (
-            <motion.div
-              key={stat.labelKey}
-              initial={{ scale: 0 }}
-              animate={inView ? { scale: 1 } : {}}
-              transition={{ delay: 1 + index * 0.1, type: 'spring' }}
-              className="text-center p-6 border border-primary/30 rounded-lg backdrop-blur-cyber hover:border-glow transition-all group"
+          {group.skills.map((skill, i) => (
+            <motion.li
+              key={skill.name}
+              initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.05 }}
+              whileHover={{ y: -4 }}
+              className="flex flex-col items-center gap-3 rounded-xl border border-primary/20 bg-card/50 p-5 backdrop-blur-sm transition-colors hover:border-primary hover:border-glow"
             >
-              <div className="text-4xl md:text-5xl font-heading text-primary mb-2 group-hover:scale-110 transition-transform">
-                {stat.number}
-              </div>
-              <div className="text-sm text-muted-foreground font-ui">
-                {t(stat.labelKey)}
-              </div>
-            </motion.div>
+              <skill.icon className="h-9 w-9 text-primary" aria-hidden="true" />
+              <span className="text-center font-ui text-sm">{skill.name}</span>
+            </motion.li>
           ))}
-        </motion.div>
+        </motion.ul>
       </div>
     </section>
   );

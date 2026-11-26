@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
+
+const EASE: [number, number, number, number] = [0.76, 0, 0.24, 1];
 
 const preloaderWords = [
   'Hello',
@@ -14,15 +16,15 @@ const preloaderWords = [
   'স্বাগতম',
 ];
 
-const slideUp = {
+const slideUp: Variants = {
   initial: { top: 0 },
   exit: {
     top: '-100vh',
-    transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1], delay: 0.2 },
+    transition: { duration: 0.8, ease: EASE, delay: 0.2 },
   },
 };
 
-const wordFade = {
+const wordFade: Variants = {
   initial: { opacity: 0, y: 10 },
   enter: {
     opacity: 0.75,
@@ -60,14 +62,14 @@ export const Preloader = ({ isLoading }: PreloaderProps) => {
   const initialPath = `M0 0 L${w} 0 L${w} ${h} Q${w / 2} ${h + 300} 0 ${h} L0 0`;
   const targetPath = `M0 0 L${w} 0 L${w} ${h} Q${w / 2} ${h} 0 ${h} L0 0`;
 
-  const curve = {
+  const curve: Variants = {
     initial: {
       d: initialPath,
-      transition: { duration: 0.7, ease: [0.76, 0, 0.24, 1] },
+      transition: { duration: 0.7, ease: EASE },
     },
     exit: {
       d: targetPath,
-      transition: { duration: 0.7, ease: [0.76, 0, 0.24, 1], delay: 0.3 },
+      transition: { duration: 0.7, ease: EASE, delay: 0.3 },
     },
   };
 
@@ -87,7 +89,7 @@ export const Preloader = ({ isLoading }: PreloaderProps) => {
                 className="flex items-center gap-2"
                 style={{
                   color: 'hsl(var(--background))',
-                  fontFamily: "'JetBrains Mono', monospace",
+                  fontFamily: "'JetBrains Mono Variable', monospace",
                   fontSize: 'clamp(1.5rem, 4vw, 2.5rem)',
                 }}
                 variants={wordFade}

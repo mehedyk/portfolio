@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import animate from "tailwindcss-animate";
 
 export default {
   darkMode: ["class"],
@@ -14,9 +15,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ['Orbitron', 'Space Grotesk', 'sans-serif'],
-        body: ['JetBrains Mono', 'monospace'],
-        ui: ['Space Grotesk', 'sans-serif'],
+        heading: ['Orbitron', 'Space Grotesk Variable', 'sans-serif'],
+        body: ['JetBrains Mono Variable', 'monospace'],
+        ui: ['Space Grotesk Variable', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -92,5 +93,5 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [animate],
 } satisfies Config;

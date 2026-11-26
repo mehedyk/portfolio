@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Wand2, X } from 'lucide-react';
+import { Wand2, X, Check } from 'lucide-react';
 import { useThemeStore, cursorEffects, CursorEffectType } from '@/stores/themeStore';
 
 export const CursorEffectsPanel = () => {
@@ -28,9 +28,10 @@ export const CursorEffectsPanel = () => {
           group
         "
         title="Cursor Effects"
+        aria-label="Cursor effects"
       >
         <Wand2 className="w-3.5 h-3.5 text-primary group-hover:animate-spin" />
-        <span className="hidden sm:inline text-primary/80">{active?.icon}</span>
+        {active && <active.icon className="hidden sm:inline w-3.5 h-3.5 text-primary/80" aria-hidden="true" />}
         <span className="hidden sm:inline opacity-60 max-w-[70px] truncate">{active?.name}</span>
         {open ? <X className="w-3 h-3 opacity-50" /> : null}
       </motion.button>
@@ -68,10 +69,10 @@ export const CursorEffectsPanel = () => {
                       : 'hover:bg-primary/10 text-foreground/80'}
                   `}
                 >
-                  <span className="text-base leading-none">{effect.icon}</span>
+                  <effect.icon className="w-4 h-4" aria-hidden="true" />
                   <span>{effect.name}</span>
                   {cursorEffect === effect.id && (
-                    <span className="ml-auto text-primary-foreground/70">●</span>
+                    <Check className="ml-auto w-3.5 h-3.5 text-primary-foreground/80" aria-hidden="true" />
                   )}
                 </button>
               ))}

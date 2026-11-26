@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
 import { useThemeStore, type CliStyleType } from '@/stores/themeStore';
-import { Minus, Square, X } from 'lucide-react';
 import { ThemeCycleButton } from '@/components/ThemeCycleButton';
 
 const CLI_STYLES: Record<CliStyleType, { bg: string; text: string; prompt: string; accent: string; border: string }> = {
@@ -38,7 +37,7 @@ const NEOFETCH = [
       'kawser@kali',
       '----------',
       'OS: Kali GNU/Linux Rolling x86_64',
-      'Host: Portfolio v2.0',
+      'Host: Portfolio v4.0',
       'Kernel: React 18.3.1 + TypeScript',
       'Shell: zsh 5.9',
       'Theme: Fard (Dark) [GTK2/3]',
@@ -126,7 +125,7 @@ const COMMANDS: Record<string, string[]> = {
     '      |_|V...       |_|',
     '',
     '[!] This portfolio is NOT vulnerable to SQL injection.',
-    '[*] Because it doesn\'t use SQL. It\'s a static React app.',
+    '[*] The content API talks to MongoDB, and every input is validated server-side.',
     '',
   ],
   history: [],

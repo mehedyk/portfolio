@@ -28,14 +28,22 @@ export function ProjectsCMS() {
     setLoading(false);
   };
 
+  const [errorMsg, setErrorMsg] = useState('');
+
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this project?')) return;
-    await supabase.from('projects').delete().eq('id', id);
+    setErrorMsg('');
+    const { error } = await supabase.from('projects').delete().eq('id', id);
+    if (error) {
+      setErrorMsg(`Failed to delete project: ${error.message}`);
+      return;
+    }
     fetchProjects();
   };
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMsg('');
     const newProject = {
       title,
       category,
@@ -46,7 +54,11 @@ export function ProjectsCMS() {
       featured: false,
       sort_order: projects.length + 1,
     };
-    await supabase.from('projects').insert([newProject]);
+    const { error } = await supabase.from('projects').insert([newProject]);
+    if (error) {
+      setErrorMsg(`Failed to save project: ${error.message}`);
+      return;
+    }
     setIsAdding(false);
     setTitle('');
     setCategory('');
@@ -66,6 +78,12 @@ export function ProjectsCMS() {
           {isAdding ? 'Cancel' : <><PlusIcon className="w-4 h-4 mr-2" /> New Project</>}
         </Button>
       </div>
+
+      {errorMsg && (
+        <div className="p-3 text-sm rounded-lg bg-destructive/15 border border-destructive/30 text-destructive font-mono">
+          {errorMsg}
+        </div>
+      )}
 
       {isAdding && (
         <form onSubmit={handleAdd} className="bg-card p-6 border border-border rounded-xl space-y-4 shadow-lg">

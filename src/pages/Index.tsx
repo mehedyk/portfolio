@@ -21,18 +21,30 @@ import { CursorEffects } from '@/components/CursorEffects';
 import { CursorEffectsPanel } from '@/components/CursorEffectsPanel';
 import { CliTheme } from '@/components/CliTheme';
 import { GhostChatbot } from '@/components/GhostChatbot';
-import { useVisitorTracker } from '@/hooks/useVisitorTracker';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { LumoraShowcase } from '@/components/LumoraShowcase';
 
 const Index = () => {
-  useVisitorTracker();
   const { theme } = useThemeStore();
-  const [isLoading, setIsLoading] = useState(true);
+  // The intro plays once per browser session, and never for people who ask for reduced motion.
+  const [isLoading, setIsLoading] = useState(() => {
+    try {
+      const seen = sessionStorage.getItem('intro-seen') === '1';
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      return !seen && !reduced;
+    } catch {
+      return false;
+    }
+  });
 
-  // Preloader auto-finishes after ~2.5s of word cycling
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 3000);
+    if (!isLoading) return;
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+      try { sessionStorage.setItem('intro-seen', '1'); } catch { /* private mode: fine */ }
+    }, 2400);
     return () => clearTimeout(timer);
-  }, []);
+  }, [isLoading]);
 
   useEffect(() => {
     const themeClass = themes.find(t => t.id === theme)?.class || '';
@@ -41,10 +53,6 @@ const Index = () => {
     });
     if (themeClass) document.documentElement.classList.add(themeClass);
   }, [theme]);
-
-  const scrollToSection = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-  };
 
   const isCli = theme === 'cli';
 
@@ -64,8 +72,8 @@ const Index = () => {
           <EasterEgg />
           <LanguageSelector />
           <CursorEffectsPanel />
-          <CursorEffects />
-          <GhostChatbot />
+          <ErrorBoundary label="CursorEffects" fallback={null}><CursorEffects /></ErrorBoundary>
+          <ErrorBoundary label="GhostChatbot" fallback={null}><GhostChatbot /></ErrorBoundary>
         </div>
       ) : (
         /* ── Normal themes ── */
@@ -82,13 +90,14 @@ const Index = () => {
           <Testimonials />
           <Contact />
           <Footer />
+          <ErrorBoundary label="Lumora" fallback={null}><LumoraShowcase /></ErrorBoundary>
           <CommandPalette />
           <EasterEgg />
           <LanguageSelector />
-          <CursorTrail />
+          <ErrorBoundary label="CursorTrail" fallback={null}><CursorTrail /></ErrorBoundary>
           <CursorEffectsPanel />
-          <CursorEffects />
-          <GhostChatbot />
+          <ErrorBoundary label="CursorEffects" fallback={null}><CursorEffects /></ErrorBoundary>
+          <ErrorBoundary label="GhostChatbot" fallback={null}><GhostChatbot /></ErrorBoundary>
         </div>
       )}
     </>

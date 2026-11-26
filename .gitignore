@@ -1,31 +1,27 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-
+# Dependencies & build output
 node_modules
 dist
 dist-ssr
-*.local
+.netlify
 
-# Editor directories and files
+# Secrets — NEVER commit real values (.env.example IS committed: it documents the names only)
+.env
+.env.local
+.env.*.local
+
+# Logs & editors
+logs
+*.log
+npm-debug.log*
 .vscode/*
 !.vscode/extensions.json
 .idea
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
 *.sw?
+coverage
 
-# Environment variables — NEVER commit these
-.env
-.env.local
-.env.*.local
-.env.example
-For antigravity/
+# Private notes & guides — kept on my machine, never published
+docs/
+SECURITY_NOTES.md
+SETUP_AND_DEPLOY.md
+*.private.md
