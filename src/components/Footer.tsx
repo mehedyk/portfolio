@@ -1,6 +1,6 @@
-import { motion } from 'framer-motion';
 import { Terminal } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
+import { SITE } from '@/config/site';
 
 export const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -20,7 +20,7 @@ export const Footer = () => {
           {/* Brand */}
           <div>
             <div className="flex items-center space-x-2 mb-4">
-              <Terminal className="h-6 w-6 text-primary" />
+              <Terminal className="h-6 w-6 text-primary" aria-hidden="true" />
               <span className="font-heading text-xl text-glow">KAWSER</span>
             </div>
             <p className="text-sm text-muted-foreground font-body">
@@ -53,13 +53,22 @@ export const Footer = () => {
           <div>
             <h4 className="font-heading text-primary mb-4">{t('footer.getInTouch')}</h4>
             <ul className="space-y-2 text-sm font-body text-muted-foreground">
-              <li>kawser2305341202@diu.edu.bd</li>
-              <li>Dhaka, Bangladesh</li>
+              <li><a href={`mailto:${SITE.email}`} className="hover:text-primary transition-colors">{SITE.email}</a></li>
+              <li>{SITE.location}</li>
               <li className="flex items-center gap-2">
                 <kbd className="px-2 py-1 bg-muted rounded text-xs">Ctrl</kbd>
                 <span>+</span>
                 <kbd className="px-2 py-1 bg-muted rounded text-xs">K</kbd>
                 <span className="text-primary">{t('footer.quickNav')}</span>
+              </li>
+              <li>
+                <a
+                  href={SITE.cvUrl}
+                  download={SITE.cvFileName}
+                  className="text-primary hover:underline"
+                >
+                  Download CV (PDF) ↓
+                </a>
               </li>
               <li>
                 <a
@@ -78,10 +87,10 @@ export const Footer = () => {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-primary/20 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-muted-foreground font-ui">
-            © {currentYear} S. M. Mehedy Kawser. All rights reserved.
+            © {currentYear} {SITE.name}. All rights reserved.
           </p>
           <p className="text-xs text-muted-foreground font-mono">
-            Designed & Built by S. M. Mehedy Kawser
+            Designed & Built by {SITE.name}
           </p>
         </div>
       </div>

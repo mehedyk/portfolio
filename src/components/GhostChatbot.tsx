@@ -2,30 +2,34 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Send, MessageCircle, Trash2 } from 'lucide-react';
 import { useThemeStore } from '@/stores/themeStore';
-
-const GROQ_KEY = import.meta.env.VITE_GROQ_API_KEY as string | undefined;
-const GROQ_MODEL = 'llama-3.3-70b-versatile';
+import { SITE, API } from '@/config/site';
+import { PROJECTS } from '@/data/projectsData';
 
 interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
 }
 
-const SYSTEM_PROMPT = `You are a helpful AI assistant embedded in the portfolio of S. M. Mehedy Kawser, a Software Engineering student at Daffodil International University, Dhaka, Bangladesh. He specializes in full-stack development, cybersecurity, and privacy-first architecture. His tech stack includes React, Next.js, TypeScript, Node.js, Python, Tailwind CSS, and Supabase. He builds projects like Fard Vault (zero-knowledge password manager), Sirr (E2E encrypted messenger), JomiMap (bilingual land measurement tool), and more. His GitHub is github.com/mehedyk. Be friendly, concise, and helpful. If asked about things you don't know about Mehedy, say you'd recommend reaching out to him directly.`;
+/** Globals the cursor effects use to talk to the ghost (typed, instead of `window as any`). */
+interface GhostGlobals {
+  __ghostVanish?: () => void;
+  __ghostRef?: unknown;
+  __ghostPos?: unknown;
+}
 
 // Offline fallback knowledge base
 const FALLBACK_KB: Record<string, string> = {
   about:
-    "S. M. Mehedy Kawser is a Software Engineering student at Daffodil International University in Dhaka, Bangladesh. He specializes in full-stack development, cybersecurity, and privacy-first architecture. He's passionate about building secure, high-performance applications with modern web technologies.",
+    "S.M. Mehedy Kawser is a final-year B.Sc. Software Engineering student at Daffodil International University in Dhaka (graduating December 2026). He builds full-stack web apps and is writing his undergraduate thesis on deepfake detection with a lightweight CNN.",
   projects:
-    "Mehedy's featured projects include:\n• Fard Vault — A zero-knowledge password manager with AES-256-GCM encryption and Argon2id key derivation.\n• Sirr — An end-to-end encrypted messenger using X25519 key exchange.\n• JomiMap — A bilingual land measurement tool for Bangladesh.\n• Numerical Analysis Workbench — Interactive root-finding visualizer.\n• Portfolio Builder — Generate professional portfolios quickly.\n• Algo Visualizer — 3D algorithm visualization for sorting, graphs, trees, and pathfinding.\n• QiyamBreak — A Muslim-focused wellness break reminder for Windows/Linux.\nHe has 22 projects in total spanning web apps, desktop apps, and more.",
+    `Some of Mehedy's projects:\n• Portfolio Maker — his capstone SaaS for generating portfolio sites.\n• Sirr — an end-to-end encrypted chat app.\n• Fard Vault — a zero-knowledge password manager.\n• LandTech — fraud and double-selling detection (hackathon).\n• Prohori — a mobile-wallet scam shield (AI Dev Fest).\n• Numerical Analysis Workbench — step-by-step root finding.\nThere are ${PROJECTS.length} projects in total — see the Projects section.`,
   security:
-    "Mehedy focuses heavily on cybersecurity and privacy-first architecture. His work includes zero-knowledge encryption (Fard Vault uses AES-256-GCM with Argon2id), end-to-end encrypted messaging (Sirr uses X25519 + AES-256-GCM), and he studies offensive security concepts including Kali Linux tools, network scanning, and penetration testing methodologies.",
-  tech: "Mehedy's tech stack includes React, Next.js, TypeScript, Node.js, Python, Tailwind CSS, Vite, Framer Motion, GSAP, Zustand, Three.js, WebGL, Supabase, and various cryptographic libraries. He's proficient in both frontend and backend development.",
+    "Security shows up in what he builds: Sirr is end-to-end encrypted, Fard Vault is a zero-knowledge password manager, and his capstone uses row-level security, server-side checks and upload validation. He also works on Kali Linux and studies secure software development.",
+  tech: "His stack: React, Next.js, TypeScript, Node.js, MongoDB, PostgreSQL, Supabase, Python, Java, C/C++, PHP and Tailwind CSS. He deploys on Vercel, Netlify and Railway, and uses Git and GitHub Actions.",
   contact:
-    "You can reach S. M. Mehedy Kawser at:\n• Email: kawser2305341202@diu.edu.bd\n• LinkedIn: linkedin.com/in/mehedyk\n• GitHub: github.com/mehedyk\n• Facebook: facebook.com/mahdi.kawser\n• Portfolio: mehedy.netlify.app",
+    `You can reach Mehedy here:\n• Contact form at the bottom of this page\n• Email: ${SITE.email}\n• LinkedIn: linkedin.com/in/mehedyk\n• GitHub: github.com/mehedyk\nHis CV is downloadable from the top of the page.`,
   default:
-    "I'm the AI assistant for S. M. Mehedy Kawser's portfolio. I can tell you about his projects, technical skills, cybersecurity expertise, or how to get in touch with him. What would you like to know?",
+    "I'm the assistant for Mehedy's portfolio. I can tell you about his projects, skills, studies, or how to get in touch. What would you like to know?",
 };
 
 function getFallbackResponse(query: string): string {
@@ -160,6 +164,9 @@ export const GhostChatbot = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  // true until a request fails; drives the "AI Assistant" / "Knowledge Base" label in the header
+  const [aiOnline, setAiOnline] = useState(true);
+  const inputRef = useRef<HTMLInputElement>(null);
   const [vanishing, setVanishing] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -200,6 +207,11 @@ export const GhostChatbot = () => {
       y: window.innerHeight * 0.3 + Math.random() * window.innerHeight * 0.3,
     };
     pickNewTarget();
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      if (outerRef.current) outerRef.current.style.transform = `translate3d(${posRef.current.x - ghostSize / 2}px, ${posRef.current.y - ghostSize / 2}px, 0)`;
+      return;
+    }
 
     const maxSpeed = isMobile ? 0.6 : 1.0;
     const steerStrength = isMobile ? 0.008 : 0.012;
@@ -270,6 +282,15 @@ export const GhostChatbot = () => {
     return () => clearInterval(interval);
   }, [ghostDocked, vanishing, pickNewTarget]);
 
+  // Escape closes the drawer; opening it focuses the input.
+  useEffect(() => {
+    if (!chatOpen) return;
+    inputRef.current?.focus();
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setChatOpen(false); };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [chatOpen]);
+
   // Ghost click handler
   const handleGhostClick = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     e.stopPropagation();
@@ -287,13 +308,14 @@ export const GhostChatbot = () => {
 
   // Expose vanish trigger and position on window for CursorEffects
   useEffect(() => {
-    (window as any).__ghostVanish = triggerVanish;
-    (window as any).__ghostRef = outerRef;
-    (window as any).__ghostPos = posRef;
+    const g = window as unknown as GhostGlobals;
+    g.__ghostVanish = triggerVanish;
+    g.__ghostRef = outerRef;
+    g.__ghostPos = posRef;
     return () => {
-      delete (window as any).__ghostVanish;
-      delete (window as any).__ghostRef;
-      delete (window as any).__ghostPos;
+      delete g.__ghostVanish;
+      delete g.__ghostRef;
+      delete g.__ghostPos;
     };
   }, [triggerVanish]);
 
@@ -306,45 +328,23 @@ export const GhostChatbot = () => {
     setInput('');
     setLoading(true);
 
-    // If no API key, use fallback knowledge base
-    if (!GROQ_KEY) {
-      setTimeout(() => {
-        setMessages((prev) => [
-          ...prev,
-          { role: 'assistant', content: getFallbackResponse(msg) },
-        ]);
-        setLoading(false);
-      }, 400 + Math.random() * 400);
-      return;
-    }
-
     try {
-      const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      const res = await fetch(API.chat, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${GROQ_KEY}`,
-        },
-        body: JSON.stringify({
-          model: GROQ_MODEL,
-          messages: [
-            { role: 'system', content: SYSTEM_PROMPT },
-            ...messages.slice(-10),
-            userMsg,
-          ],
-          max_tokens: 512,
-          temperature: 0.7,
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        // Only plain user/assistant turns are sent. The server adds the system prompt.
+        body: JSON.stringify({ messages: [...messages.slice(-7), userMsg] }),
+        signal: AbortSignal.timeout(20000),
       });
 
       if (!res.ok) throw new Error(`API error ${res.status}`);
 
-      const data = await res.json();
-      const reply =
-        data.choices?.[0]?.message?.content || 'Sorry, I could not process that.';
-      setMessages((prev) => [...prev, { role: 'assistant', content: reply }]);
+      const data = (await res.json()) as { reply?: string };
+      setAiOnline(true);
+      setMessages((prev) => [...prev, { role: 'assistant', content: data.reply || 'Sorry, I could not process that.' }]);
     } catch {
-      // Fallback on network/API error
+      // Fallback on network/API error or offline mode
+      setAiOnline(false);
       setMessages((prev) => [
         ...prev,
         { role: 'assistant', content: getFallbackResponse(msg) },
@@ -375,6 +375,10 @@ export const GhostChatbot = () => {
         >
           {/* Inner element handles floating wobble animation separately */}
           <div
+            role="button"
+            tabIndex={0}
+            aria-label="Open chat with the portfolio assistant"
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setChatOpen(true); } }}
             onClick={handleGhostClick}
             onTouchEnd={handleGhostClick}
             style={{
@@ -411,6 +415,7 @@ export const GhostChatbot = () => {
               animation: 'serene-pulse 3s ease-in-out infinite',
             }}
             title="Chat with AI"
+            aria-label="Chat with AI"
           >
             <MessageCircle
               className="w-5 h-5"
@@ -428,6 +433,8 @@ export const GhostChatbot = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 320 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            role="dialog"
+            aria-label="Chat with the portfolio assistant"
             className="fixed right-0 top-0 bottom-0 z-50 w-full sm:w-96 flex flex-col border-l"
             style={{
               background: 'hsl(var(--background) / 0.97)',
@@ -444,10 +451,10 @@ export const GhostChatbot = () => {
                 <div
                   className="w-3 h-3 rounded-full"
                   style={{
-                    background: GROQ_KEY
+                    background: aiOnline
                       ? 'rgba(100, 255, 150, 0.7)'
                       : 'rgba(255, 200, 100, 0.7)',
-                    boxShadow: GROQ_KEY
+                    boxShadow: aiOnline
                       ? '0 0 8px rgba(100, 255, 150, 0.4)'
                       : '0 0 8px rgba(255, 200, 100, 0.4)',
                   }}
@@ -456,7 +463,7 @@ export const GhostChatbot = () => {
                   className="font-mono text-sm"
                   style={{ color: 'hsl(var(--foreground))' }}
                 >
-                  {GROQ_KEY ? 'AI Assistant' : 'Knowledge Base'}
+                  {aiOnline ? 'AI Assistant' : 'Knowledge Base'}
                 </span>
               </div>
               <div className="flex items-center gap-1">
@@ -465,6 +472,7 @@ export const GhostChatbot = () => {
                     onClick={clearChat}
                     className="p-1.5 rounded hover:opacity-70 transition-opacity"
                     title="Clear chat"
+                    aria-label="Clear chat"
                   >
                     <Trash2
                       className="w-4 h-4"
@@ -475,6 +483,7 @@ export const GhostChatbot = () => {
                 <button
                   onClick={() => setChatOpen(false)}
                   className="p-1.5 rounded hover:opacity-70 transition-opacity"
+                  aria-label="Close chat"
                 >
                   <X
                     className="w-5 h-5"
@@ -485,7 +494,7 @@ export const GhostChatbot = () => {
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-3">
+            <div className="flex-1 overflow-y-auto p-4 space-y-3" aria-live="polite">
               {messages.length === 0 && (
                 <div className="py-6 space-y-4">
                   <p
@@ -562,6 +571,9 @@ export const GhostChatbot = () => {
               style={{ borderColor: 'hsl(var(--border))' }}
             >
               <input
+                ref={inputRef}
+                aria-label="Message"
+                maxLength={500}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => {
@@ -580,6 +592,7 @@ export const GhostChatbot = () => {
               />
               <button
                 onClick={() => sendMessage()}
+                aria-label="Send message"
                 disabled={loading || !input.trim()}
                 className="p-2 rounded-lg transition-opacity hover:opacity-80 disabled:opacity-30"
                 style={{

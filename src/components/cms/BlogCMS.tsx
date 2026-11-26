@@ -27,14 +27,22 @@ export function BlogCMS() {
     setLoading(false);
   };
 
+  const [errorMsg, setErrorMsg] = useState('');
+
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this post?')) return;
-    await supabase.from('blog_posts').delete().eq('id', id);
+    setErrorMsg('');
+    const { error } = await supabase.from('blog_posts').delete().eq('id', id);
+    if (error) {
+      setErrorMsg(`Failed to delete transmission: ${error.message}`);
+      return;
+    }
     fetchPosts();
   };
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMsg('');
     const newPost = {
       title,
       category,
@@ -45,7 +53,11 @@ export function BlogCMS() {
       sort_order: posts.length + 1,
       published_at: new Date().toISOString(),
     };
-    await supabase.from('blog_posts').insert([newPost]);
+    const { error } = await supabase.from('blog_posts').insert([newPost]);
+    if (error) {
+      setErrorMsg(`Failed to publish transmission: ${error.message}`);
+      return;
+    }
     setIsAdding(false);
     setTitle('');
     setCategory('');
@@ -64,6 +76,12 @@ export function BlogCMS() {
           {isAdding ? 'Cancel' : <><PlusIcon className="w-4 h-4 mr-2" /> New Transmission</>}
         </Button>
       </div>
+
+      {errorMsg && (
+        <div className="p-3 text-sm rounded-lg bg-destructive/15 border border-destructive/30 text-destructive font-mono">
+          {errorMsg}
+        </div>
+      )}
 
       {isAdding && (
         <form onSubmit={handleAdd} className="bg-card p-6 border border-border rounded-xl space-y-4 shadow-lg">

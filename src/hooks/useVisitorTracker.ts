@@ -1,6 +1,22 @@
 import { useEffect } from 'react';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
+function maskIp(rawIp?: string): string {
+  if (!rawIp || typeof rawIp !== 'string') return 'unknown';
+  const trimmed = rawIp.trim();
+  if (trimmed.includes('.')) {
+    const parts = trimmed.split('.');
+    if (parts.length === 4) {
+      return `${parts[0]}.${parts[1]}.${parts[2]}.xxx`;
+    }
+  }
+  if (trimmed.includes(':')) {
+    const parts = trimmed.split(':');
+    return `${parts.slice(0, 3).join(':')}:xxxx`;
+  }
+  return 'masked';
+}
+
 export function useVisitorTracker() {
   useEffect(() => {
     const trackVisitor = async () => {
@@ -15,12 +31,11 @@ export function useVisitorTracker() {
         
         const data = await response.json();
 
-        // 3. Insert into Supabase
-        // We wrap this in a try-catch so the app doesn't break if the table hasn't been created yet.
+        // 3. Insert anonymized data into Supabase
         const { error } = await supabase.from('visitors').insert([{
-          ip_address: data.ip || 'unknown',
-          city: data.city || 'unknown',
-          country: data.country_name || 'unknown'
+          ip_address: maskIp(data.ip),
+          city: (data.city || 'unknown').toString().slice(0, 100),
+          country: (data.country_name || 'unknown').toString().slice(0, 100)
         }]);
 
         if (!error) {

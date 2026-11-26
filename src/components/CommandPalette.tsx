@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Terminal } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Terminal, Home, User, CalendarDays, Zap, Briefcase, Wrench, BookOpen, MessageSquare, Mail, FileDown, Github, Linkedin } from 'lucide-react';
+import { SITE } from '@/config/site';
 import {
-  Command,
   CommandDialog,
   CommandEmpty,
   CommandGroup,
@@ -12,15 +12,21 @@ import {
 } from '@/components/ui/command';
 
 const sections = [
-  { id: 'hero', label: 'Home', icon: '🏠' },
-  { id: 'about', label: 'About', icon: '👤' },
-  { id: 'timeline', label: 'Journey', icon: '🗓️' },
-  { id: 'skills', label: 'Skills', icon: '⚡' },
-  { id: 'projects', label: 'Projects', icon: '💼' },
-  { id: 'services', label: 'Services', icon: '🛠️' },
-  { id: 'blog', label: 'Blog', icon: '📝' },
-  { id: 'testimonials', label: 'Testimonials', icon: '💬' },
-  { id: 'contact', label: 'Contact', icon: '📧' },
+  { id: 'hero', label: 'Home', icon: Home },
+  { id: 'about', label: 'About', icon: User },
+  { id: 'timeline', label: 'Journey', icon: CalendarDays },
+  { id: 'skills', label: 'Skills', icon: Zap },
+  { id: 'projects', label: 'Projects', icon: Briefcase },
+  { id: 'services', label: 'Services', icon: Wrench },
+  { id: 'blog', label: 'Blog', icon: BookOpen },
+  { id: 'testimonials', label: 'Testimonials', icon: MessageSquare },
+  { id: 'contact', label: 'Contact', icon: Mail },
+];
+
+const actions = [
+  { label: 'Download CV', icon: FileDown, href: SITE.cvUrl, download: true },
+  { label: 'GitHub', icon: Github, href: SITE.social.github, download: false },
+  { label: 'LinkedIn', icon: Linkedin, href: SITE.social.linkedin, download: false },
 ];
 
 export const CommandPalette = () => {
@@ -54,8 +60,9 @@ export const CommandPalette = () => {
         onClick={() => setOpen(true)}
         className="fixed bottom-8 right-8 z-50 w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center border-glow-intense hover:scale-110 transition-transform shadow-2xl"
         whileHover={{ rotate: 180 }}
+        aria-label="Open quick navigation (Ctrl+K)"
       >
-        <Terminal className="w-6 h-6" />
+        <Terminal className="w-6 h-6" aria-hidden="true" />
       </motion.button>
 
       {/* Command Dialog */}
@@ -79,8 +86,28 @@ export const CommandPalette = () => {
                 onSelect={() => scrollToSection(section.id)}
                 className="cursor-pointer"
               >
-                <span className="mr-2 text-lg">{section.icon}</span>
+                <section.icon className="mr-2 h-4 w-4" aria-hidden="true" />
                 <span>{section.label}</span>
+              </CommandItem>
+            ))}
+          </CommandGroup>
+          <CommandGroup heading="Links">
+            {actions.map((a) => (
+              <CommandItem
+                key={a.label}
+                onSelect={() => {
+                  if (a.download) {
+                    const el = document.createElement('a');
+                    el.href = a.href; el.download = SITE.cvFileName; el.click();
+                  } else {
+                    window.open(a.href, '_blank', 'noopener,noreferrer');
+                  }
+                  setOpen(false);
+                }}
+                className="cursor-pointer"
+              >
+                <a.icon className="mr-2 h-4 w-4" aria-hidden="true" />
+                <span>{a.label}</span>
               </CommandItem>
             ))}
           </CommandGroup>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>Mehedy Kawser</title>
+  <defs><radialGradient id="g" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#c0ff2e" stop-opacity=".22"/><stop offset="1" stop-color="#c0ff2e" stop-opacity="0"/></radialGradient></defs>
+  <rect width="512" height="512" rx="113" fill="#0b0f14"/>
+  <rect x="3" y="3" width="506" height="506" rx="110" fill="none" stroke="#c0ff2e" stroke-opacity=".16" stroke-width="3"/>
+  <circle cx="256" cy="256" r="150" fill="url(#g)"/>
+  <g stroke="#c0ff2e" stroke-width="56" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <polyline points="146,384 146,128 256,282 366,128 366,384"/>
+  </g>
+</svg>

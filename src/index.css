@@ -2,27 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom Fonts */
-@font-face {
-  font-family: 'Hashira';
-  src: url('https://fonts.cdnfonts.com/css/hacked') format('woff2');
-  font-weight: 700;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'LEWUIRE';
-  src: url('https://fonts.cdnfonts.com/css/space-mono') format('woff2');
-  font-weight: 400 600;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Kregan';
-  src: url('https://fonts.cdnfonts.com/css/jetbrains-mono-2') format('woff2');
-  font-weight: 300 700;
-  font-display: swap;
-}
+/* Fonts are self-hosted via @fontsource (imported in main.tsx): no third-party font requests. */
 
 /* ═══════════════════════════════════════════════════════════════════
    THEME 1 — FARD (DEFAULT)
@@ -184,7 +164,7 @@
   }
 
   .theme-cli * {
-    font-family: 'JetBrains Mono', 'Courier New', monospace !important;
+    font-family: 'JetBrains Mono Variable', 'Courier New', monospace !important;
   }
 }
 
@@ -359,4 +339,39 @@
 @keyframes serene-pulse {
   0%, 100% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.3), 0 0 30px rgba(100, 200, 255, 0.1); }
   50% { box-shadow: 0 0 25px rgba(255, 215, 0, 0.5), 0 0 50px rgba(100, 200, 255, 0.2); }
+}
+
+/* ───────────── Lumora showcase: liquid glass + overlay motion ───────────── */
+.liquid-glass {
+  background: rgba(255, 255, 255, 0.01);
+  background-blend-mode: luminosity;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: none;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+.liquid-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.4px;
+  background: linear-gradient(180deg,
+    rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.15) 20%,
+    rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%,
+    rgba(255,255,255,0.15) 80%, rgba(255,255,255,0.45) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+@keyframes train-bob {
+  0%, 100% { transform: translateY(0) scale(1.03); }
+  50%      { transform: translateY(-6px) scale(1.03); }
+}
+.train-bob { animation: train-bob 3s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .train-bob { animation: none; transform: scale(1.03); }
 }

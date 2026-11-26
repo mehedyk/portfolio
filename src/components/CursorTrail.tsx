@@ -6,7 +6,7 @@ import gsap from 'gsap';
 const themeColors: Record<ThemeType, string> = {
   'fard': 'hsl(78, 100%, 59%)', // Lime green accent
   'true-classic': '', // No trail for light themes
-  'sin-city': 'hsl(0, 0%, 98%)', // Pure white
+  'monolith': 'hsl(0, 0%, 98%)', // Pure white
   'nordic-light': '', // No trail for light themes
   'cli': 'hsl(210, 65%, 59%)', // Kali blue
 };

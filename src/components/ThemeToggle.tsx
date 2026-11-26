@@ -1,5 +1,4 @@
-import { useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useRef } from 'react';
 import { useThemeStore, themes } from '@/stores/themeStore';
 import gsap from 'gsap';
 import { Palette } from 'lucide-react';
@@ -66,8 +65,9 @@ export const ThemeToggle = () => {
           variant="outline" 
           size="icon"
           className="border-glow hover:border-glow-intense transition-all duration-300"
+          aria-label="Choose theme"
         >
-          <Palette className="h-5 w-5" />
+          <Palette className="h-5 w-5" aria-hidden="true" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent 
@@ -82,7 +82,7 @@ export const ThemeToggle = () => {
               theme === t.id ? 'bg-primary/20 text-primary' : ''
             }`}
           >
-            <span className="mr-2 text-lg">{t.icon}</span>
+            <t.icon className="mr-2 h-4 w-4" aria-hidden="true" />
             <span>{t.name}</span>
           </DropdownMenuItem>
         ))}

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useCallback } from 'react';
-import { useThemeStore, CursorEffectType } from '@/stores/themeStore';
+import { useThemeStore } from '@/stores/themeStore';
 
 // ─── Theme accent colors ──────────────────────────────────────────────────────
 const themeAccent: Record<string, string> = {
@@ -348,15 +348,18 @@ const createCelestialBurst = (x: number, y: number) => {
   }
 };
 
+interface GhostGlobals { __ghostPos?: { current?: { x: number; y: number } }; __ghostVanish?: () => void }
+
 const handleSwordClick = (e: MouseEvent) => {
-  const ghostPos = (window as any).__ghostPos?.current;
+  const ghostGlobals = window as unknown as GhostGlobals;
+  const ghostPos = ghostGlobals.__ghostPos?.current;
   if (ghostPos) {
     const dx = e.clientX - ghostPos.x;
     const dy = e.clientY - ghostPos.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
     if (distance < 80) {
       createCelestialBurst(e.clientX, e.clientY);
-      (window as any).__ghostVanish?.();
+      ghostGlobals.__ghostVanish?.();
       return;
     }
   }
