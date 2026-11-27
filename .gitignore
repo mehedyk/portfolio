@@ -22,6 +22,7 @@ coverage
 
 # Private notes & guides — kept on my machine, never published
 docs/
+legacy-v3/
 SECURITY_NOTES.md
 SETUP_AND_DEPLOY.md
 *.private.md
